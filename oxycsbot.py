@@ -3,13 +3,13 @@
 
 from chatbot import ChatBot
 
-
+#heyyyy
 class OxyCSBot(ChatBot):
     """A simple chatbot that directs students to office hours of CS professors."""
 
     STATES = [
         'waiting',
-        'specific_faculty',
+        'specific_feeling',
         'unknown_faculty',
         'unrecognized_faculty',
     ]
@@ -76,6 +76,7 @@ class OxyCSBot(ChatBot):
             'justin': 'T 3-4pm; W 2-3pm; F 4-5pm',
             'kathryn': 'MF 4-5:30pm',
             'umit': 'M 3-5pm; W 10am-noon, 3-5pm',
+            'jasmine': 'M 1-5pm; W 8am-noon, 2-5pm',
         }
         return office_hours[professor]
 
