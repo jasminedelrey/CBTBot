@@ -50,6 +50,7 @@ class OxyCSBot(ChatBot):
         'justin',
         'kathryn',
         'umit',
+        'jasmine',
     ]
 
     def __init__(self):
