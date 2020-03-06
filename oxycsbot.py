@@ -5,7 +5,7 @@ from chatbot import ChatBot
 
 
 class OxyCSBot(ChatBot):
-    """An amazing chatbot that directs students to office hours of CS professors."""
+    """An amazingggggggg chatbot that directs students to office hours of CS professors."""
 
     STATES = [
         'waiting',
