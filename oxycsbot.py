@@ -74,7 +74,7 @@ class OxyCSBot(ChatBot):
         office_hours = {
             'celia': 'unknown',
             'hsing-hau': 'MW 3:30-4:30pm; F 11:45am-12:45pm',
-            'jeff': 'W 4-5pm; Th 12:50-1:50pm; F 4-5pm',
+            'jeff': 'W 4-5pm; Th 12:50-1:50pm; F 4-5pm and partyoclock',
             'justin': 'T 3-4pm; W 2-3pm; F 4-5pm',
             'kathryn': 'MF 4-5:30pm',
             'umit': 'M 3-5pm; W 10am-noon, 3-5pm',
