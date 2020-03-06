@@ -31,6 +31,7 @@ class OxyCSBot(ChatBot):
         'hsing-hau': 'hsing-hau',
         'umit': 'umit',
         'yalcinalp': 'umit',
+        'jasmine': 'jasmine',
 
         # generic
         'thanks': 'thanks',
@@ -76,6 +77,7 @@ class OxyCSBot(ChatBot):
             'justin': 'T 3-4pm; W 2-3pm; F 4-5pm',
             'kathryn': 'MF 4-5:30pm',
             'umit': 'M 3-5pm; W 10am-noon, 3-5pm',
+            'jasmine': 'party oclock',
         }
         return office_hours[professor]
 
