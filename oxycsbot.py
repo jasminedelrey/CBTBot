@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""A simple chatbot that directs students to office hours of CS professors."""
+"""A simple chatbot that utilizes Cognitive Behavioral Therapy to help first-generation students
+with distressing thoughts of their first year of college."""
 
 from chatbot import ChatBot
 
@@ -7,11 +8,15 @@ from chatbot import ChatBot
 class OxyCSBot(ChatBot):
     """An amazingggggggg chatbot that directs students to office hours of CS professors."""
 
+    "CD = Cognitive Distortion"
+
     STATES = [
         'waiting',
-        'specific_faculty',
-        'unknown_faculty',
-        'unrecognized_faculty',
+        'specific_emotion',
+        'unknown_emotion',
+        'unknown_CD',
+        'specific_CD',
+        'challenge_emotion',
     ]
 
     TAGS = {
@@ -19,19 +24,27 @@ class OxyCSBot(ChatBot):
         'office hours': 'office-hours',
         'OH': 'office-hours',
         'help': 'office-hours',
+        '': 'hello',
 
-        # professors
-        'kathryn': 'kathryn',
-        'leonard': 'kathryn',
-        'justin': 'justin',
-        'li': 'justin',
-        'jeff': 'jeff',
-        'miller': 'jeff',
-        'celia': 'celia',
-        'hsing-hau': 'hsing-hau',
-        'umit': 'umit',
-        'yalcinalp': 'umit',
-        'jasmine': 'jasmine',
+        # emotions
+        'anxiety': 'anxious',
+        'anxious': 'anxiety',
+        'homesick': 'homesick',
+        'isolated': 'isolation',
+        'isolation': 'isolated',
+        'worthless': 'worthless',
+        'worried': 'worry',
+        'worry': 'worried',
+        'sad': 'sad',
+        'depressed': 'depressed',
+        'scared': 'scared',
+        'tired': 'tired',
+        'annoyed': 'annoyed',
+        'angry': 'angry',
+        'unprepared': 'unprepared',
+        'emptiness': 'empty',
+        'empty': 'emptiness',
+        'lost': 'lost',
 
         # generic
         'thanks': 'thanks',
@@ -41,28 +54,35 @@ class OxyCSBot(ChatBot):
         'yep': 'yes',
         'no': 'no',
         'nope': 'no',
+        'hello': 'hello',
     }
 
     PROFESSORS = [
-        'celia',
-        'hsing-hau',
-        'jeff',
-        'justin',
-        'kathryn',
-        'umit',
-        'jasmine',
+        'anxiety',
+        'homesick',
+        'isolated',
+        'worthless',
+        'worried',
+        'sad',
+        'scared',
+        'tired',
+        'annoyed',
+        'angry',
+        'unprepared',
+        'empty',
+        'lost'
     ]
 
     def __init__(self):
         """Initialize the OxyCSBot.
 
-        The `professor` member variable stores whether the target professor has
+        The `emotion` member variable stores whether the target emotion has
         been identified.
         """
         super().__init__(default_state='waiting')
-        self.professor = None
+        self.emotion = None
 
-    def get_office_hours(self, professor):
+    def get_emotion(self, emotion):
         """Find the office hours of a professor.
 
         Arguments:
@@ -71,8 +91,8 @@ class OxyCSBot(ChatBot):
         Returns:
             str: The office hours of that professor.
         """
-        office_hours = {
-            'celia': 'unknown',
+        responses = {
+            'anxious': 'unknown',
             'hsing-hau': 'MW 3:30-4:30pm; F 11:45am-12:45pm',
             'jeff': 'W 4-5pm; Th 12:50-1:50pm; F 4-5pm and partyoclock',
             'justin': 'T 3-4pm; W 2-3pm; F 4-5pm',
@@ -80,7 +100,10 @@ class OxyCSBot(ChatBot):
             'umit': 'M 3-5pm; W 10am-noon, 3-5pm',
             'jasmine': 'party oclock',
         }
-        return office_hours[professor]
+        return responses[emotion]
+
+
+
 
     def get_office(self, professor):
         """Find the office of a professor.
@@ -113,8 +136,11 @@ class OxyCSBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        self.professor = None
-        if 'office-hours' in tags:
+        self.emotion = None
+        self.greeting = None
+        if 'hello' in tags:
+            return self.greet('')
+        if 'help' in tags:
             for professor in self.PROFESSORS:
                 if professor in tags:
                     self.professor = professor
@@ -199,9 +225,15 @@ class OxyCSBot(ChatBot):
 
     # "finish" functions
 
+    def greet_(self):
+        """Send a message and go to the default state."""
+        return "Hello! I'm an O-team leader and I will be helping you through this rough patch." \
+               "I'll be using Cognitive Behavioral Therapy to help navigate your feelings."
+
     def finish_confused(self):
         """Send a message and go to the default state."""
         return "Sorry, I'm just a simple bot that can't understand much. You can ask me about office hours though!"
+
 
     def finish_location(self):
         """Send a message and go to the default state."""
