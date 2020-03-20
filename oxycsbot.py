@@ -25,9 +25,9 @@ class OxyCSBot(ChatBot):
         # intent
         'help': 'help',
         'feel': 'help',
-        '': 'hello',
-        'hello':'hello',
-        'hi':'hello',
+        '': 'help',
+        'hello':'help',
+        'hi':'help',
 
         # emotions
         'anxiety': 'anxious',
@@ -83,6 +83,13 @@ class OxyCSBot(ChatBot):
         'academic': 'academic',
         'hard': 'hard',
         'alone': 'alone',
+        'roommate': 'scenario',
+        'homesick': 'scenario',
+        'home': 'scenario',
+        'lost': 'scenario',
+        'academic': 'scenario',
+        'hard': 'scenario',
+        'alone': 'scenario',
     }
 
     EMOTIONS = [
@@ -110,6 +117,12 @@ class OxyCSBot(ChatBot):
         'hard',
         'alone',
     ]
+
+    CORE_BELIEFS = {
+        'not enough',
+        'not prepared',
+
+    }
 
     def __init__(self):
         """Initialize the OxyCSBot.
@@ -148,6 +161,11 @@ class OxyCSBot(ChatBot):
         }
         return responses[emotion]
 
+    def get_cd(self, core_belief):
+        responses = {
+
+        }
+
 
     # "waiting" state functions
 
@@ -162,9 +180,7 @@ class OxyCSBot(ChatBot):
             str: The message to send to the user.
         """
         self.emotion = None
-        self.greet = None
-        if 'hello' in tags:
-            return self.greet('hello')
+        self.greet('hello')
         if 'help' in tags:
             for emotion in self.EMOTIONS:
                 if emotion in tags:
@@ -180,8 +196,6 @@ class OxyCSBot(ChatBot):
         """Send a message when entering the "specific_faculty" state."""
         response = [
             f"{self.get_emotion(self.emotion)}"
-            # f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
-            # 'Do you know where their office is?',
         ]
         return response
 
@@ -195,23 +209,14 @@ class OxyCSBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        for scenario in self.SCENARIOS:
-            if scenario in tags:
-                self.scenario = scenario
-                return self.go_to_state('specific_scenario')
+        if 'scenario' in tags:
+            for scenario in self.SCENARIOS:
+                if scenario in tags:
+                    self.scenario = scenario
+                    return self.go_to_state('specific_scenario')
 
         return self.finish_confused()
 
-    def on_enter_specific_scenario(self):
-        """Send a message when entering the "specific_faculty" state."""
-        response = '\n'.join([
-            f"Ok. It is good to understand a specific time that you felt this way.",
-            'Lets dive into what makes you feel this way. '
-            'What core beliefs are instilled in these times in your life?'
-            # f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
-            # 'Do you know where their office is?',
-        ])
-        return response
 
     def on_enter_unknown_emotion(self):
         """Send a message when entering the "unknown_faculty" state."""
@@ -231,18 +236,59 @@ class OxyCSBot(ChatBot):
             if emotion in tags:
                 self.emotion = emotion
                 return self.go_to_state('specific_emotion')
-        return self.go_to_state('unrecognized_emotion')
+        return self.go_to_state('unknown_emotion')
 
     # "unrecognized_faculty" state functions
 
-    def on_enter_unrecognized_faculty(self):
+    def on_enter_specific_scenario(self):
+        """Send a message when entering the "specific_faculty" state."""
+        response = '\n'.join([
+            f"Ok. It is good to understand a specific time that you felt this way.",
+            'Lets dive into what makes you feel this way. '
+            'What core beliefs are instilled in these times in your life?'
+            # f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
+            # 'Do you know where their office is?',
+        ])
+        return response
+
+    def respond_from_specific_scenario(self, message, tags):
+        for scenario in self.SCENARIOS:
+            if scenario in tags:
+                return self.go_to_state('specific_cb')
+        return self.go_to_state('unknown_cb')
+
+
+    def on_enter_specific_cb(self):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
             "I'm not sure I understand - are you looking for",
             "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
         ])
 
-    def respond_from_unrecognized_faculty(self, message, tags):
+    def respond_from_specific_cb(self, message, tags):
+        """Decide what state to go to from the "unrecognized_faculty" state.
+
+        Parameters:
+            message (str): The incoming message.
+            tags (Mapping[str, int]): A count of the tags that apply to the message.
+
+        Returns:
+            str: The message to send to the user.
+        """
+        for emotion in self.EMOTIONS:
+            if emotion in tags:
+                self.emotion = emotion
+                return self.go_to_state('specific_emotion')
+        return self.finish('emotion')
+
+    def on_enter_specific_cd(self):
+        """Send a message when entering the "unrecognized_faculty" state."""
+        return ' '.join([
+            "I'm not sure I understand - are you looking for",
+            "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
+        ])
+
+    def respond_from_specific_cd(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
 
         Parameters:
@@ -272,7 +318,8 @@ class OxyCSBot(ChatBot):
 
     def finish_location(self):
         """Send a message and go to the default state."""
-        return f"{self.professor.capitalize()}'s office is in {self.get_office(self.professor)}"
+        return "I am finished."
+        # return f"{self.professor.capitalize()}'s office is in {self.get_office(self.professor)}"
 
     def finish_success(self):
         """Send a message and go to the default state."""
