@@ -21,10 +21,11 @@ class OxyCSBot(ChatBot):
 
     TAGS = {
         # intent
-        'office hours': 'office-hours',
-        'OH': 'office-hours',
-        'help': 'office-hours',
+        'help': 'help',
+        'feel': 'help',
         '': 'hello',
+        'hello':'hello',
+        'hi':'hello',
 
         # emotions
         'anxiety': 'anxious',
@@ -57,7 +58,7 @@ class OxyCSBot(ChatBot):
         'hello': 'hello',
     }
 
-    PROFESSORS = [
+    EMOTIONS = [
         'anxiety',
         'homesick',
         'isolated',
@@ -137,14 +138,14 @@ class OxyCSBot(ChatBot):
             str: The message to send to the user.
         """
         self.emotion = None
-        self.greeting = None
+        self.greet = None
         if 'hello' in tags:
-            return self.greet('')
+            return self.greet('hello')
         if 'help' in tags:
-            for professor in self.PROFESSORS:
-                if professor in tags:
-                    self.professor = professor
-                    return self.go_to_state('specific_faculty')
+            for emotion in self.EMOTIONS:
+                if emotion in tags:
+                    self.emotion = emotion
+                    return self.go_to_state('specific_emotion')
             return self.go_to_state('unknown_faculty')
         elif 'thanks' in tags:
             return self.finish('thanks')
@@ -153,15 +154,16 @@ class OxyCSBot(ChatBot):
 
     # "specific_faculty" state functions
 
-    def on_enter_specific_faculty(self):
+    def on_enter_specific_emotion(self):
         """Send a message when entering the "specific_faculty" state."""
         response = '\n'.join([
-            f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
-            'Do you know where their office is?',
+            f"Can you explain when you felt {self.emotion}?"
+            # f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
+            # 'Do you know where their office is?',
         ])
         return response
 
-    def respond_from_specific_faculty(self, message, tags):
+    def respond_from_specific_emotion(self, message, tags):
         """Decide what state to go to from the "specific_faculty" state.
 
         Parameters:
@@ -225,7 +227,7 @@ class OxyCSBot(ChatBot):
 
     # "finish" functions
 
-    def greet_(self):
+    def greet_hello(self):
         """Send a message and go to the default state."""
         return "Hello! I'm an O-team leader and I will be helping you through this rough patch." \
                "I'll be using Cognitive Behavioral Therapy to help navigate your feelings."
