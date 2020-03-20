@@ -14,6 +14,8 @@ class OxyCSBot(ChatBot):
         'waiting',
         'specific_emotion',
         'unknown_emotion',
+        'specific_scenario',
+        'unknown_scenario',
         'unknown_CD',
         'specific_CD',
         'challenge_emotion',
@@ -122,43 +124,30 @@ class OxyCSBot(ChatBot):
         """Find the office hours of a professor.
 
         Arguments:
-            professor (str): The professor of interest.
+            emotion (str): The emotion of interest.
 
         Returns:
             str: The office hours of that professor.
         """
         responses = {
-            'bad': ' ',
-            'hsing-hau': 'MW 3:30-4:30pm; F 11:45am-12:45pm',
-            'jeff': 'W 4-5pm; Th 12:50-1:50pm; F 4-5pm and partyoclock',
-            'justin': 'T 3-4pm; W 2-3pm; F 4-5pm',
-            'kathryn': 'MF 4-5:30pm',
-            'umit': 'M 3-5pm; W 10am-noon, 3-5pm',
-            'jasmine': 'party oclock',
+            'anxiety': "I'm sorry that you feel this way. Do you feel anything physically when you feel that way?",
+            'homesick': "What about school makes you feel this way?",
+            'isolated': "What do you do when you feel this way?",
+            'worthless': "What makes you feel this way?",
+            'worried': "What are some things that make you worry?",
+            'sad': "What do you think of when you feel this way?",
+            'scared': "What are some core beliefs that make you feel this way?",
+            'tired': "What is part of your schedule that makes you feel this way?",
+            'annoyed': "What are some things that makes you feel this way?",
+            'angry': "What makes you feel this way?",
+            'unprepared': "What makes you feel this way?",
+            'empty': "What makes you feel this way?",
+            'lost': "What makes you feel this way?",
+            'bad': "What makes you feel this way?",
+
         }
         return responses[emotion]
 
-
-
-
-    def get_office(self, professor):
-        """Find the office of a professor.
-
-        Arguments:
-            professor (str): The professor of interest.
-
-        Returns:
-            str: The office of that professor.
-        """
-        office = {
-            'celia': 'Swan 232',
-            'hsing-hau': 'Swan 302',
-            'jeff': 'Fowler 321',
-            'justin': 'Swan B102',
-            'kathryn': 'Swan B101',
-            'umit': 'Swan 226',
-        }
-        return office[professor]
 
     # "waiting" state functions
 
@@ -182,8 +171,6 @@ class OxyCSBot(ChatBot):
                     self.emotion = emotion
                     return self.go_to_state('specific_emotion')
             return self.go_to_state('unknown_emotion')
-        elif 'thanks' in tags:
-            return self.finish('thanks')
         else:
             return self.finish('confused')
 
@@ -192,7 +179,7 @@ class OxyCSBot(ChatBot):
     def on_enter_specific_emotion(self):
         """Send a message when entering the "specific_faculty" state."""
         response = [
-            f"I'm here to listen. Can you explain the time when you felt {self.emotion}?"
+            f"{self.get_emotion(self.emotion)}"
             # f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
             # 'Do you know where their office is?',
         ]
@@ -215,21 +202,15 @@ class OxyCSBot(ChatBot):
 
         return self.finish_confused()
 
-
-        # if '' in tags:
-        #     return self.finish('success')
-        # else:
-        #     return self.finish('location')
-
-    # "unknown_faculty" state functions
-
     def on_enter_specific_scenario(self):
         """Send a message when entering the "specific_faculty" state."""
-        response = [
-            f" What makes you believe that {self.scenario}?"
+        response = '\n'.join([
+            f"Ok. It is good to understand a specific time that you felt this way.",
+            'Lets dive into what makes you feel this way. '
+            'What core beliefs are instilled in these times in your life?'
             # f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
             # 'Do you know where their office is?',
-        ]
+        ])
         return response
 
     def on_enter_unknown_emotion(self):
@@ -271,11 +252,11 @@ class OxyCSBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        for professor in self.PROFESSORS:
-            if professor in tags:
-                self.professor = professor
-                return self.go_to_state('specific_faculty')
-        return self.finish('fail')
+        for emotion in self.EMOTIONS:
+            if emotion in tags:
+                self.emotion = emotion
+                return self.go_to_state('specific_emotion')
+        return self.finish('emotion')
 
     # "finish" functions
 
