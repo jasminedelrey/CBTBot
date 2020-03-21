@@ -5,7 +5,7 @@ with distressing thoughts of their first year of college."""
 from chatbot import ChatBot
 
 
-class OxyCSBot(ChatBot):
+class CBTBot(ChatBot):
     """A chatbot that uses CBT techniques to unravel discomforting thoughts."""
 
     "CD = Cognitive Distortion"
@@ -25,9 +25,19 @@ class OxyCSBot(ChatBot):
         # intent
         'help': 'help',
         'feel': 'help',
+        'am': 'help',
         '': 'help',
         'hello':'help',
         'hi':'help',
+
+        'roommate': 'moment',
+        'roommates': 'moment',
+        'homesick': 'moment',
+        'home': 'moment',
+        'lost': 'moment',
+        'academic': 'moment',
+        'hard': 'moment',
+        'alone': 'moment',
 
         # emotions
         'anxiety': 'anxious',
@@ -76,6 +86,7 @@ class OxyCSBot(ChatBot):
         'nope': 'no',
 
         #scenarios
+        'roommates': 'roommate',
         'roommate': 'roommate',
         'homesick': 'homesick',
         'home': 'home',
@@ -83,13 +94,6 @@ class OxyCSBot(ChatBot):
         'academic': 'academic',
         'hard': 'hard',
         'alone': 'alone',
-        'roommate': 'scenario',
-        'homesick': 'scenario',
-        'home': 'scenario',
-        'lost': 'scenario',
-        'academic': 'scenario',
-        'hard': 'scenario',
-        'alone': 'scenario',
     }
 
     EMOTIONS = [
@@ -110,6 +114,7 @@ class OxyCSBot(ChatBot):
 
     SCENARIOS = [
         'roommate',
+        'roommates',
         'homesick',
         'home',
         'lost',
@@ -143,7 +148,7 @@ class OxyCSBot(ChatBot):
             str: The office hours of that professor.
         """
         responses = {
-            'anxiety': "I'm sorry that you feel this way. Do you feel anything physically when you feel that way?",
+            'anxiety': 'Im sorry that you feel this way. What makes you feel this way?',
             'homesick': "What about school makes you feel this way?",
             'isolated': "What do you do when you feel this way?",
             'worthless': "What makes you feel this way?",
@@ -160,6 +165,17 @@ class OxyCSBot(ChatBot):
 
         }
         return responses[emotion]
+
+    def get_scenario(self, scenario):
+        responses = {
+        'roommate': "I see. Have you talked with Resed abot what we can do?",
+        'homesick': "Herrick is a great resource.",
+        'lost': "duck.",
+        'academic': "llama.",
+        'hard': "elephant.",
+        'alone': "what.",
+        }
+        return responses[scenario]
 
 
     # def get_cd(self, core_belief):
@@ -195,7 +211,6 @@ class OxyCSBot(ChatBot):
             str: The message to send to the user.
         """
         self.emotion = None
-        self.finish('hello')
         if 'help' in tags:
             for emotion in self.EMOTIONS:
                 if emotion in tags:
@@ -205,10 +220,10 @@ class OxyCSBot(ChatBot):
         else:
             return self.finish('confused')
 
-    # "specific_faculty" state functions
+    # "specific_emotion" state functions
 
     def on_enter_specific_emotion(self):
-        """Send a message when entering the "specific_faculty" state."""
+        """Send a message when entering the "specific_emotion" state."""
         response = [
             f"{self.get_emotion(self.emotion)}"
         ]
@@ -224,13 +239,16 @@ class OxyCSBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        if 'scenario' in tags:
+        self.scenario = None
+        if 'moment' in tags:
             for scenario in self.SCENARIOS:
                 if scenario in tags:
                     self.scenario = scenario
                     return self.go_to_state('specific_scenario')
+                else:
+                    return self.finish_confused()
 
-        return self.finish_confused()
+            return self.finish_confused()
 
 
     def on_enter_unknown_emotion(self):
@@ -247,6 +265,7 @@ class OxyCSBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
+
         for emotion in self.EMOTION:
             if emotion in tags:
                 self.emotion = emotion
@@ -256,9 +275,10 @@ class OxyCSBot(ChatBot):
     # "unrecognized_faculty" state functions
 
     def on_enter_specific_scenario(self):
-        """Send a message when entering the "specific_faculty" state."""
+        """Send a message when entering the "specific_scenario" state."""
         response = '\n'.join([
-            f"Ok. It is good to understand a specific time that you felt this way.",
+            f"{self.get_scenario(self.scenario)}."
+            "Ok. It is good to understand a specific time that you felt this way."
             'Lets dive into what makes you feel this way. '
             'What core beliefs are instilled in these times in your life?'
             # f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
@@ -269,6 +289,7 @@ class OxyCSBot(ChatBot):
     def respond_from_specific_scenario(self, message, tags):
         for scenario in self.SCENARIOS:
             if scenario in tags:
+                self.scenario = scenario
                 return self.go_to_state('specific_cb')
         return self.go_to_state('unknown_cb')
 
@@ -321,10 +342,6 @@ class OxyCSBot(ChatBot):
 
     # "finish" functions
 
-    def finish_hello(self):
-        """Send a message and go to the default state."""
-        return "Hello! I'm an O-team leader and I will be helping you through this rough patch." \
-               "I'll be using Cognitive Behavioral Therapy to help navigate your feelings."
 
     def finish_confused(self):
         """Send a message and go to the default state."""
@@ -350,4 +367,4 @@ class OxyCSBot(ChatBot):
 
 
 if __name__ == '__main__':
-    OxyCSBot().chat()
+    CBTBot().chat()
