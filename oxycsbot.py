@@ -162,24 +162,24 @@ class OxyCSBot(ChatBot):
         return responses[emotion]
 
 
-    def get_cd(self, core_belief):
-        responses = {
-            'always': "Let's challenge that notion of 'always'. But it's normal to feel this way. Can you think of times "
-            'reject':
-            'hopeless':
-            'not enough':
-            'dumb':
-            'never':
-            'bad':
-        }
+    # def get_cd(self, core_belief):
+    #     responses = {
+    #         'always': "Let's challenge that notion of 'always'. But it's normal to feel this way. Can you think of times "
+    #         'reject':
+    #         'hopeless':
+    #         'not enough':
+    #         'dumb':
+    #         'never':
+    #         'bad':
+    #     }
 
-        return responses[core_belief]
+        # return responses[core_belief]
 
-    def get_school_help(self, cd):
-        responses = {
-
-        }
-        return responses[]
+    # def get_school_help(self, cd):
+    #     responses = {
+    #
+    #     }
+    #     return responses[]
 
 
     # "waiting" state functions
@@ -195,7 +195,7 @@ class OxyCSBot(ChatBot):
             str: The message to send to the user.
         """
         self.emotion = None
-        self.greet('hello')
+        self.finish('hello')
         if 'help' in tags:
             for emotion in self.EMOTIONS:
                 if emotion in tags:
@@ -321,7 +321,7 @@ class OxyCSBot(ChatBot):
 
     # "finish" functions
 
-    def greet_hello(self):
+    def finish_hello(self):
         """Send a message and go to the default state."""
         return "Hello! I'm an O-team leader and I will be helping you through this rough patch." \
                "I'll be using Cognitive Behavioral Therapy to help navigate your feelings."
