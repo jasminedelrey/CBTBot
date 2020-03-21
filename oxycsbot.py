@@ -17,8 +17,8 @@ class CBTBot(ChatBot):
         'unknown_emotion',
         'specific_scenario',
         'unknown_scenario',
-        'unknown_CD',
-        'specific_CD',
+        'unknown_cb',
+        'specific_cb',
         'challenge_emotion',
     ]
 
@@ -102,6 +102,11 @@ class CBTBot(ChatBot):
         'dumb': 'imposter',
         'deserve': 'imposter',
 
+        # core beliefs
+        'not enough': 'not enough',
+        'not prepared': 'not prepared',
+
+
     }
 
     EMOTIONS = [
@@ -135,6 +140,11 @@ class CBTBot(ChatBot):
     CORE_BELIEFS = {
         'not enough',
         'not prepared',
+        'not good enough',
+        'undeserving',
+        'unlovable',
+        'abnormal',
+        'failure',
 
     }
 
@@ -146,6 +156,9 @@ class CBTBot(ChatBot):
         """
         super().__init__(default_state='waiting')
         self.emotion = None
+        self.scenario = None
+        self.cb = None
+        self.cd = None
 
     def get_emotion(self, emotion):
         """Find the office hours of a professor.
@@ -178,13 +191,21 @@ class CBTBot(ChatBot):
         return responses[emotion]
 
     def get_scenario(self, scenario):
+        """Find the office hours of a professor.
+
+                Arguments:
+                    scenario (str): The emotion of interest.
+
+                Returns:
+                    str: The office hours of that professor.
+                """
         responses = {
         'roommate': "I see. Have you talked with Resed abot what we can do?",
         'homesick': "Herrick is a great resource.",
         'lost': "duck.",
-        'academic': "llama.",
-        'hard': "elephant.",
-        'alone': "what.",
+        'academic': "Professors are a great resource if you feel the academics are too challenging.",
+        'hard': "College can be hard. ",
+        'alone': "Try joining some clubs to meet new people.",
         }
         return responses[scenario]
 
@@ -241,7 +262,7 @@ class CBTBot(ChatBot):
         return response
 
     def respond_from_specific_emotion(self, message, tags):
-        """Decide what state to go to from the "specific_faculty" state.
+        """Decide what state to go to from the "specific_emotion" state.
 
         Parameters:
             message (str): The incoming message.
@@ -258,15 +279,14 @@ class CBTBot(ChatBot):
             else:
                 return self.finish_confused()
 
-            return self.finish_confused()
 
 
     def on_enter_unknown_emotion(self):
-        """Send a message when entering the "unknown_faculty" state."""
+        """Send a message when entering the "unknown_emotion" state."""
         return "I see. Could you elaborate on what you're feeling now?"
 
     def respond_from_unknown_emotion(self, message, tags):
-        """Decide what state to go to from the "unknown_faculty" state.
+        """Decide what state to go to from the "unknown_emotion" state.
 
         Parameters:
             message (str): The incoming message.
@@ -276,13 +296,15 @@ class CBTBot(ChatBot):
             str: The message to send to the user.
         """
 
-        for emotion in self.EMOTION:
+        self.emotion = None
+        for emotion in self.EMOTIONS:
             if emotion in tags:
                 self.emotion = emotion
                 return self.go_to_state('specific_emotion')
         return self.go_to_state('unknown_emotion')
 
-    # "unrecognized_faculty" state functions
+
+    # "specific_scenario" state functions
 
     def on_enter_specific_scenario(self):
         """Send a message when entering the "specific_scenario" state."""
@@ -304,35 +326,13 @@ class CBTBot(ChatBot):
         return self.go_to_state('unknown_cb')
 
 
-    def on_enter_specific_cb(self):
-        """Send a message when entering the "unrecognized_faculty" state."""
-        return ' '.join([
-            "I'm not sure I understand - are you looking for",
-            "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
-        ])
-
-    def respond_from_specific_cb(self, message, tags):
-        """Decide what state to go to from the "unrecognized_faculty" state.
-
-        Parameters:
-            message (str): The incoming message.
-            tags (Mapping[str, int]): A count of the tags that apply to the message.
-
-        Returns:
-            str: The message to send to the user.
-        """
-        for emotion in self.EMOTIONS:
-            if emotion in tags:
-                self.emotion = emotion
-                return self.go_to_state('specific_emotion')
-        return self.finish('emotion')
-
     def on_enter_specific_cd(self):
         """Send a message when entering the "unrecognized_faculty" state."""
-        return ' '.join([
-            "I'm not sure I understand - are you looking for",
-            "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
+        response = '\n'.join([
+            f"{self.get_cd(self.cd)}."
+            "\n Das a cognitive distortion"
         ])
+        return response
 
     def respond_from_specific_cd(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
@@ -349,6 +349,73 @@ class CBTBot(ChatBot):
                 self.emotion = emotion
                 return self.go_to_state('specific_emotion')
         return self.finish('emotion')
+    def on_enter_unknown_cd(self):
+        """Send a message when entering the "unknown_emotion" state."""
+        return "... elaborate so that we can pinpoint a cognitive distortion"
+
+    def respond_from_unknown_cd(self, message, tags):
+        """Decide what state to go to from the "unknown_emotion" state.
+
+        Parameters:
+            message (str): The incoming message.
+            tags (Mapping[str, int]): A count of the tags that apply to the message.
+
+        Returns:
+            str: The message to send to the user.
+        """
+
+        self.cd = None
+        for cd in self.EMOTIONS:
+            if cd in tags:
+                self.emotion = cd
+                return self.go_to_state('specific_cd')
+        return self.go_to_state('unknown_cd')
+
+
+    def on_enter_specific_cb(self):
+        """Send a message when entering the "unrecognized_faculty" state."""
+        return ' '.join([
+            "That can be tricky.",
+            "That seems like a negative core belief. Lets challenge that ",
+        ])
+
+    def respond_from_specific_cb(self, message, tags):
+        """Decide what state to go to from the "unrecognized_faculty" state.
+
+        Parameters:
+            message (str): The incoming message.
+            tags (Mapping[str, int]): A count of the tags that apply to the message.
+
+        Returns:
+            str: The message to send to the user.
+        """
+        for cb in self.CORE_BELIEFS:
+            if cb in tags:
+                self.emotion = cb
+                return self.go_to_state('specific_cb')
+        return self.go_to_state('unknown_cb')
+    def on_enter_unknown_cb(self):
+        """Send a message when entering the "unknown_emotion" state."""
+        return "...no cb...elaborate so that we can pinpoint a cognitive belief"
+
+    def respond_from_unknown_cb(self, message, tags):
+        """Decide what state to go to from the "unknown_emotion" state.
+
+        Parameters:
+            message (str): The incoming message.
+            tags (Mapping[str, int]): A count of the tags that apply to the message.
+
+        Returns:
+            str: The message to send to the user.
+        """
+
+        self.cb = None
+        for cb in self.CORE_BELIEFS:
+            if cb in tags:
+                self.emotion = cb
+                return self.go_to_state('specific_cb')
+        return self.go_to_state('unknown_cb')
+
 
     # "finish" functions
 
