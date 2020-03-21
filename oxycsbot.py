@@ -2,6 +2,7 @@
 """A simple chatbot that utilizes Cognitive Behavioral Therapy to help first-generation students
 with distressing thoughts of their first year of college."""
 
+
 from chatbot import ChatBot
 
 
@@ -354,7 +355,7 @@ class CBTBot(ChatBot):
 
     def finish_confused(self):
         """Send a message and go to the default state."""
-        return "Sorry, I'm just a simple bot that can't understand much. You can ask me about office hours though!"
+        return "Sorry, I'm just a simple bot that can't understand much. Maybe try rephrasing so I can better understand."
 
 
     def finish_location(self):
