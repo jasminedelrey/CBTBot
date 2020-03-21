@@ -376,7 +376,7 @@ class CBTBot(ChatBot):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
             "That can be tricky.",
-            "That seems like a negative core belief. Lets challenge that ",
+            "That seems like a negative core belief. Lets challenge that",
         ])
 
     def respond_from_specific_cb(self, message, tags):
@@ -384,7 +384,7 @@ class CBTBot(ChatBot):
 
         Parameters:
             message (str): The incoming message.
-            tags (Mapping[str, int]): A count of the tags that apply to the message.
+            tags (Mapping[str, int]): A count of the tags that apply to the message
 
         Returns:
             str: The message to send to the user.
