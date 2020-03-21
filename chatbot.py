@@ -112,6 +112,7 @@ class ChatBot:
 
     def chat(self):
         """Start a chat with the chatbot."""
+        print("Hello! I'm an O-team leader and I will be helping you through this rough patch. How are you feeling?")
         try:
             message = input('> ')
             while message.lower() not in ('exit', 'quit'):

@@ -87,13 +87,20 @@ class CBTBot(ChatBot):
 
         #scenarios
         'roommates': 'roommate',
+        'room mate': 'roommate',
         'roommate': 'roommate',
+        'living': 'roommate',
         'homesick': 'homesick',
         'home': 'home',
         'lost': 'lost',
         'academic': 'academic',
         'hard': 'hard',
         'alone': 'alone',
+        'imposter': 'imposter',
+        'not smart': 'imposter',
+        'dumb': 'imposter',
+        'deserve': 'imposter',
+
     }
 
     EMOTIONS = [
@@ -114,13 +121,14 @@ class CBTBot(ChatBot):
 
     SCENARIOS = [
         'roommate',
-        'roommates',
         'homesick',
+        'class',
         'home',
         'lost',
         'academic',
         'hard',
-        'alone',
+
+
     ]
 
     CORE_BELIEFS = {
@@ -148,20 +156,22 @@ class CBTBot(ChatBot):
             str: The office hours of that professor.
         """
         responses = {
-            'anxiety': 'Im sorry that you feel this way. What makes you feel this way?',
-            'homesick': "What about school makes you feel this way?",
-            'isolated': "What do you do when you feel this way?",
-            'worthless': "What makes you feel this way?",
-            'worried': "What are some things that make you worry?",
-            'sad': "What do you think of when you feel this way?",
-            'scared': "What are some core beliefs that make you feel this way?",
-            'tired': "What is part of your schedule that makes you feel this way?",
+            'anxiety': 'Im sorry that you feel this way. Can you give us an example of when you felt anxious?',
+            'homesick': "Being away from your support system is challenging. What about campus life makes you miss home?",
+            'isolated': "I hear your point; college is very different from what we're used to. What are times that you feel isolated?",
+            'worthless': "I know that this isn't an easy topic. I appreciate you for sharing. What makes you feel this way? ",
+            'worried': "This is a stressful time for many students. What makes you worry?",
+            'sad': "Why?",
+            'scared': "I want you to know that your feelings are valid. What makes you scared?",
+            'tired': "There are many adjustments when transitioning to college that can make people feel worn down. Do you find yourself constantly tired or only after certain events?",
             'annoyed': "What are some things that makes you feel this way?",
-            'angry': "What makes you feel this way?",
-            'unprepared': "What makes you feel this way?",
-            'empty': "What makes you feel this way?",
-            'lost': "What makes you feel this way?",
-            'bad': "What makes you feel this way?",
+            'angry': "It is understandable to have moments of anger, but remember that it is healthy to get rid of this anger. What makes you angered?",
+            'unprepared': '\n'.join
+                    ("Transitioning to college can be a big step up, so it is common to feel like you are not prepared. "
+                    "Are there certain times that make you feel unprepared or do you always feel this way?"),
+            'empty': "Remember that you are an incredible human being full of unique experiences that make you ‘you’. Have you felt this way before or did something happen that made you feel empty?",
+            'lost': "You don’t need to have every aspect of your life planned out, remember that college is a time of exploration and discovery. What makes you feel lost?",
+            'bad': "It is normal to feel bad sometimes, but remember to not let it define your day. Did a certain event happen that made you feel bad?",
 
         }
         return responses[emotion]
@@ -240,20 +250,19 @@ class CBTBot(ChatBot):
             str: The message to send to the user.
         """
         self.scenario = None
-        if 'moment' in tags:
-            for scenario in self.SCENARIOS:
-                if scenario in tags:
-                    self.scenario = scenario
-                    return self.go_to_state('specific_scenario')
-                else:
-                    return self.finish_confused()
+        for scenario in self.SCENARIOS:
+            if scenario in tags:
+                self.scenario = scenario
+                return self.go_to_state('specific_scenario')
+            else:
+                return self.finish_confused()
 
             return self.finish_confused()
 
 
     def on_enter_unknown_emotion(self):
         """Send a message when entering the "unknown_faculty" state."""
-        return "Could you explain more of what you are feeling?"
+        return "I see. Could you elaborate on what you're feeling now?"
 
     def respond_from_unknown_emotion(self, message, tags):
         """Decide what state to go to from the "unknown_faculty" state.
@@ -287,9 +296,9 @@ class CBTBot(ChatBot):
         return response
 
     def respond_from_specific_scenario(self, message, tags):
-        for scenario in self.SCENARIOS:
-            if scenario in tags:
-                self.scenario = scenario
+        for cb in self.CORE_BELIEFS:
+            if cb in tags:
+                self.cb = cb
                 return self.go_to_state('specific_cb')
         return self.go_to_state('unknown_cb')
 
