@@ -6,7 +6,7 @@ from chatbot import ChatBot
 
 
 class OxyCSBot(ChatBot):
-    """An amazingggggggg chatbot that directs students to office hours of CS professors."""
+    """A chatbot that uses CBT techniques to unravel discomforting thoughts."""
 
     "CD = Cognitive Distortion"
 
@@ -161,10 +161,25 @@ class OxyCSBot(ChatBot):
         }
         return responses[emotion]
 
+
     def get_cd(self, core_belief):
+        responses = {
+            'always': "Let's challenge that notion of 'always'. But it's normal to feel this way. Can you think of times "
+            'reject':
+            'hopeless':
+            'not enough':
+            'dumb':
+            'never':
+            'bad':
+        }
+
+        return responses[core_belief]
+
+    def get_school_help(self, cd):
         responses = {
 
         }
+        return responses[]
 
 
     # "waiting" state functions
