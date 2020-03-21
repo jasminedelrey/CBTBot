@@ -9,6 +9,7 @@ class CBTBot(ChatBot):
     """A chatbot that uses CBT techniques to unravel discomforting thoughts."""
 
     "CD = Cognitive Distortion"
+    "CB = Core Belief"
 
     STATES = [
         'waiting',
@@ -67,7 +68,7 @@ class CBTBot(ChatBot):
         'overgeneralization': 'overgeneralization',
         'emotional reasoning': 'emotional reasoning',
         'fallacy of change': 'fallacy of change',
-        'shoulds': 'shoulds',
+        'shoulds': 'should statement',
         'catastrophizing': 'catastrophizing',
         'heavens reward fallacy': 'heavens reward fallacy',
         'always being right': 'always being right',
@@ -75,6 +76,8 @@ class CBTBot(ChatBot):
         'jump to conclusions': 'jump to conclusions',
         'blaming': 'blaming',
         'global labeling': 'global labeling',
+        # filtering, interpersonal fallacy, catastrophizing, overgeneralization, personalization,
+        # emotional reasoning, should statement
 
         # generic
         'thanks': 'thanks',
@@ -100,6 +103,30 @@ class CBTBot(ChatBot):
         'not smart': 'imposter',
         'dumb': 'imposter',
         'deserve': 'imposter',
+
+        #cognitive distortion
+        'class': 'filtering',
+        'classes': 'filtering',
+        'grade': 'filtering',
+        'grades': 'filtering',
+        'friends': 'interpersonal fallacy',
+        'other people': 'interpersonal fallacy',
+        'never':'catastrophizing',
+        'everyone': 'overgeneralization',
+        'different': 'interpersonal fallacy',
+        'stupid': 'interpersonal fallacy',
+        'smarter': 'personalization',
+        'not enough': 'emotional reasoning',
+        'not prepared': 'emotional reasoning',
+        'imposter': 'filtering',
+        'unlovable': 'personalization',
+        'abnormal': 'personalization',
+        'not confident': 'emotional reasoning',
+        'should': 'should statement',
+        'succeed': 'catastrophizing',
+        'weird': 'interpersonal fallacy',
+        'judge': 'interpersonal fallacy',
+
 
     }
 
@@ -131,9 +158,23 @@ class CBTBot(ChatBot):
 
     ]
 
-    CORE_BELIEFS = {
-        'not enough',
-        'not prepared',
+    CD = {
+        'filtering',
+        'polarized thinking',
+        'control fallacies',
+        'fallacy of fallacies',
+        'overgeneralization',
+        'emotional reasoning',
+        'fallacy of change',
+        'shoulds',
+        'catastrophizing',
+        'heavens reward fallacy',
+        'always being right',
+        'personalization',
+        'jump to conclusions',
+        'blaming',
+        'global labeling',
+
 
     }
 
@@ -176,14 +217,40 @@ class CBTBot(ChatBot):
         }
         return responses[emotion]
 
+    # filtering, interpersonal fallacy, catastrophizing, overgeneralization, personalization,
+    # emotional reasoning, should statement
+
+    def get_cd(self, cd):
+        """Find the office hours of a professor.
+
+        Arguments:
+            cd (str): The emotion of interest.
+
+        Returns:
+            str: The office hours of that professor.
+        """
+        responses = {
+            'filtering': '',
+            'interpersonal fallacy': '',
+            'catastrophizing': '',
+            'overgeneralization': '',
+            'personalization': 'Sometimes things are out of your control. And that is completely ok.',
+            'emotional reasoning': '',
+            'should statement': '',
+        }
+        return responses[cd]
+
     def get_scenario(self, scenario):
         responses = {
-        'roommate': "I see. Have you talked with Resed abot what we can do?",
+        'roommate': "I see. Have you talked with Res Ed about what we can do?",
+        'cultural':
         'homesick': "Herrick is a great resource.",
         'lost': "duck.",
         'academic': "llama.",
-        'hard': "elephant.",
+        'hard': "",
         'alone': "what.",
+        'class':,
+        'adjust':,
         }
         return responses[scenario]
 
@@ -287,30 +354,53 @@ class CBTBot(ChatBot):
         """Send a message when entering the "specific_scenario" state."""
         response = '\n'.join([
             f"{self.get_scenario(self.scenario)}."
-            "Ok. It is good to understand a specific time that you felt this way."
-            'Lets dive into what makes you feel this way. '
-            'What core beliefs are instilled in these times in your life?'
+            " Ok. It is good to understand a specific time that you felt this way."
+            ' Lets dive into what makes you feel this way. '
+            ' What core beliefs are instilled in these times in your life?'
             # f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
             # 'Do you know where their office is?',
         ])
         return response
 
     def respond_from_specific_scenario(self, message, tags):
-        for cb in self.CORE_BELIEFS:
-            if cb in tags:
-                self.cb = cb
-                return self.go_to_state('specific_cb')
-        return self.go_to_state('unknown_cb')
+        for cd in self.CD:
+            if cd in tags:
+                self.cd = cd
+                return self.go_to_state('specific_cd')
+        return self.go_to_state('unknown_cd')
 
 
-    def on_enter_specific_cb(self):
+    # def on_enter_specific_cb(self):
+    #     """Send a message when entering the "unrecognized_faculty" state."""
+    #     return ' '.join([
+    #         "I'm not sure I understand - are you looking for",
+    #         "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
+    #     ])
+    #
+    # def respond_from_specific_cb(self, message, tags):
+    #     """Decide what state to go to from the "unrecognized_faculty" state.
+    #
+    #     Parameters:
+    #         message (str): The incoming message.
+    #         tags (Mapping[str, int]): A count of the tags that apply to the message.
+    #
+    #     Returns:
+    #         str: The message to send to the user.
+    #     """
+    #     for emotion in self.EMOTIONS:
+    #         if emotion in tags:
+    #             self.emotion = emotion
+    #             return self.go_to_state('specific_emotion')
+    #     return self.finish('emotion')
+
+    def on_enter_specific_cd(self):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
             "I'm not sure I understand - are you looking for",
             "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
         ])
 
-    def respond_from_specific_cb(self, message, tags):
+    def respond_from_specific_cd(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
 
         Parameters:
@@ -326,7 +416,7 @@ class CBTBot(ChatBot):
                 return self.go_to_state('specific_emotion')
         return self.finish('emotion')
 
-    def on_enter_specific_cd(self):
+    def on_enter_challenge_emotion(self):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
             "I'm not sure I understand - are you looking for",
