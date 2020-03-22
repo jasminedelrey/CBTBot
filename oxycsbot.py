@@ -105,6 +105,13 @@ class CBTBot(ChatBot):
         # core beliefs
         'not enough': 'not enough',
         'not prepared': 'not prepared',
+        'not enough': 'not enough',
+        'not prepared':'not prepared',
+        'not good enough':'not good enough',
+        'undeserving':'undeserving',
+        'unlovable':'unlovable',
+        'abnormal': 'abnormal',
+        'failure': 'failure',
 
 
     }
@@ -283,7 +290,7 @@ class CBTBot(ChatBot):
 
     def on_enter_unknown_emotion(self):
         """Send a message when entering the "unknown_emotion" state."""
-        return "I see. Could you elaborate on what you're feeling now?"
+        return "I am not sure if I understand. Could you elaborate on what you're feeling now?"
 
     def respond_from_unknown_emotion(self, message, tags):
         """Decide what state to go to from the "unknown_emotion" state.
@@ -319,6 +326,7 @@ class CBTBot(ChatBot):
         return response
 
     def respond_from_specific_scenario(self, message, tags):
+        """ If there is a specific scenario, """
         for cb in self.CORE_BELIEFS:
             if cb in tags:
                 self.cb = cb
@@ -375,34 +383,27 @@ class CBTBot(ChatBot):
     def on_enter_specific_cb(self):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
-            "That can be tricky.",
-            "That seems like a negative core belief. Lets challenge that",
+            "Feeling like you are", self.cb, "seems like a negative core belief. Lets challenge that. Think of a time when you felt the opposite of this negative feeling..."
         ])
-
     def respond_from_specific_cb(self, message, tags):
-        """Decide what state to go to from the "unrecognized_faculty" state.
-
-        Parameters:
-            message (str): The incoming message.
-            tags (Mapping[str, int]): A count of the tags that apply to the message
-
-        Returns:76
-            str: The message to send to the user.
-        """
         for cb in self.CORE_BELIEFS:
             if cb in tags:
-                self.emotion = cb
+                self.cb = cb
                 return self.go_to_state('specific_cb')
         return self.go_to_state('unknown_cb')
+
     def on_enter_unknown_cb(self):
-        """Send a message when entering the "unknown_emotion" state."""
-        return "...no cb...elaborate so that we can pinpoint a cognitive belief"
+        """Send a message when entering the "unknown_cb" state."""
+        return "I am not sure if I understand. Core beliefs are what we believe about ourselves that influence how we interpret our experiences. \n" \
+               "If our core beliefs are negative, they will negatively impact how we see others, the world, ourselves, and our future. \n" \
+               "Here are some common negative beliefs. If you suffer from any of these cognitive beliefs, please type it. \n" \
+               "not enough \n not prepared \n undeserving \n unlovable \n abnormal \n failure "
 
     def respond_from_unknown_cb(self, message, tags):
         """Decide what state to go to from the "unknown_emotion" state.
 
         Parameters:
-            message (str): The incoming message.
+            message (str): The incoming message.bnh
             tags (Mapping[str, int]): A count of the tags that apply to the message.
 
         Returns:
