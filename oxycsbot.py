@@ -131,6 +131,9 @@ class CBTBot(ChatBot):
         'judge': 'interpersonal fallacy',
         'drop out': 'catastrophizing',
         'wrong': 'personalization',
+        'undermine': 'emotional reasoning',
+        'not capable': 'overgeneralization',
+        "don't believe": 'emotional reasoning',
 
 
     }
@@ -372,7 +375,7 @@ class CBTBot(ChatBot):
             if cd in tags:
                 self.cd = cd
                 return self.go_to_state('specific_cd')
-        return self.go_to_state('unknown_cd')
+        return self.go_to_state('cd_wave2')
 
 
     def on_enter_specific_cd(self):
@@ -391,9 +394,9 @@ class CBTBot(ChatBot):
         """
 
         if 'yes' in tags:
-            return self.go_to_state(self.challenge_emotion)
+            return self.go_to_state('challenge_emotion')
         else:
-            return self.go_to_state(self.cd_wave2)
+            return self.go_to_state('cd_wave2')
 
     def on_enter_challenge_emotion(self):
         """Send a message when entering the "unrecognized_faculty" state."""
@@ -420,7 +423,7 @@ class CBTBot(ChatBot):
 
     def on_enter_cd_wave2(self):
         """Send a message when entering the "unrecognized_faculty" state."""
-        return "Do you feel like you"
+        return "Expanding on our core beliefs can help expose what thought patterns sway us to feel bad about ourselves. Could you state a belief you hold close to you? Such as comparing yourself or undermining your capabilities?"
 
     def respond_from_cd_wave2(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
@@ -432,18 +435,15 @@ class CBTBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        for emotion in self.EMOTIONS:
-            if emotion in tags:
-                self.emotion = emotion
-                return self.go_to_state('specific_emotion')
-        return self.finish('emotion')
+        for cd in self.CD:
+            if cd in tags:
+                self.cd = cd
+                return self.go_to_state('specific_cd')
+        return self.go_to_state('unknown_cd')
 
-    def on_enter_cd_wave3(self):
+    def on_enter_unknown_cd(self):
         """Send a message when entering the "unrecognized_faculty" state."""
-        return ' '.join([
-            "I'm not sure I understand - are you looking for",
-            "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
-        ])
+        return "Thank you for sharing your feelings. I am here to listen. Could you explain a certain scenario that is making you feel uncomfortable?"
 
     def respond_from_cd_wave3(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
@@ -455,14 +455,34 @@ class CBTBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        for emotion in self.EMOTIONS:
-            if emotion in tags:
-                self.emotion = emotion
-                return self.go_to_state('specific_emotion')
-        return self.finish('emotion')
+        for scenario in self.SCENARIOS:
+            if scenario in tags:
+                self.scenario = scenario
+                return self.go_to_state('specific_scenario')
+            else:
+                return self.go_to_state('confused_scenario')
 
+    def on_enter_confused_scenario(self):
+        return "I can see that this is discomforting to you. What is another time you felt this way?"
 
+    def respond_from_confused_scenario(self, message, tags):
+        for scenario in self.SCENARIOS:
+            if scenario in tags:
+                self.scenario = scenario
+                return self.go_to_state('specific_scenario')
+            else:
+                return self.go_to_state('find_campus_help')
 
+    def on_enter_find_campus_help(self):
+        return "Thank you for sharing your feelings. This is the first step towards molding more positive thought patterns for your day to day life. I think that other campus resources will monumentally help you work through these feelings. Would you like to someone about religious, cultural, personal, or academic matters?"
+
+    def respond_find_campus_help(self, message, tags):
+        for area in self.SCENARIOS:
+            if scenario in tags:
+                self.scenario = scenario
+                return self.go_to_state('specific_scenario')
+            else:
+                return self.go_to_state('find_campus_help')
 
 
 
