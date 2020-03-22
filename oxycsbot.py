@@ -310,7 +310,6 @@ class CBTBot(ChatBot):
                 return self.go_to_state('specific_emotion')
         return self.go_to_state('unknown_emotion')
 
-
     # "specific_scenario" state functions
 
     def on_enter_specific_scenario(self):
