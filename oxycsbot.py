@@ -38,6 +38,9 @@ class CBTBot(ChatBot):
        'confused_campus_help',
        'specific_area',
        'check_feeling',
+        'check_feeling2',
+        'check_feeling2_good',
+
 
     ]
 
@@ -183,8 +186,35 @@ class CBTBot(ChatBot):
     ]
 
     CORE_BELIEFS = {
+        'class',
+        'classes',
+        'grade',
+        'grades',
+        'friends',
+        'other people',
+        'never',
+        'everyone',
+        'different',
+        'stupid',
+        'smarter',
         'not enough',
         'not prepared',
+        'imposter',
+        'unlovable',
+        'abnormal',
+        'not confident',
+        'should',
+        'succeed',
+        'success',
+        'job',
+        'internship',
+        'weird',
+        'judge',
+        'drop out',
+        'wrong',
+        'undermine',
+        'not capable',
+        "don't believe",
         'not good enough',
         'undeserving',
         'unlovable',
@@ -205,7 +235,7 @@ class CBTBot(ChatBot):
     ASSIGNMENTS = {'going to a place of worship.', 'volunteering for a cause you believe in.', 'going to the park.',
                    'going for a walk.', 'going out for dinner.', 'calling friends and/or family.',
                    'going out with friends and/or family.', 'working out.', 'getting immersed in art.', 'dancing.',
-                   'singing.', 'watching your favorite movie.', 'journaling your thoughts.'}
+                   'singing.', 'watching your favorite movie.', 'journaling your thoughts.', 'slowly breathing in and out.'}
 
     def __init__(self):
         """Initialize the OxyCSBot.
@@ -251,6 +281,11 @@ class CBTBot(ChatBot):
             'undermine': 'emotional reasoning',
             'not capable': 'overgeneralization',
             "don't believe": 'emotional reasoning',
+            'not good enough': "filtering",
+            'undeserving': "personalization",
+            'unlovable': "personalization",
+            'abnormal': "interpersonal fallacy",
+            'failure': "catastrophizing",
         }
         return responses[cb]
 
@@ -404,8 +439,8 @@ class CBTBot(ChatBot):
     def on_enter_specific_cb(self):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
-            "Feeling like you are", self.cb,
-            "seems like a negative core belief. Lets dive deeper." + self.get_cd(self.get_cb_distortion(self.cb))
+            "Feeling like you are ", self.cb,
+            "seems like a negative core belief. Lets dive deeper. " + self.get_cd(self.get_cb_distortion(self.cb))
         ])
 
     def respond_from_specific_cb(self, message, tags):
@@ -557,9 +592,27 @@ class CBTBot(ChatBot):
 
     def respond_from_check_feeling(self, message, tags):
         if 'yes' in tags:
-            return self.finish('success')
+            return self.go_to_state('check_feeling2_good')
         else:
             return self.go_to_state('breathing1')
+
+    def on_enter_check_feeling2(self):
+        return "Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, or academic matters?"
+
+    def respond_from_check_feeling2(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('find_campus_help')
+        else:
+            return self.finish('success')
+
+    def on_enter_check_feeling2_good(self):
+        return "That's great to hear! Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, or academic matters?"
+
+    def respond_from_check_feeling2_good(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('find_campus_help')
+        else:
+            return self.finish('success')
 
     # breathing exercise
     def on_enter_breathing1(self):
@@ -602,10 +655,7 @@ class CBTBot(ChatBot):
         return "Great! Now do the same two more times. Do you feel more calm? "
 
     def respond_from_breathing3(self, message, tags):
-        if 'yes' in tags:
-            return self.finish('homework')
-        else:
-            return self.finish('homework_fail')
+        return self.go_to_state('check_feeling2')
 
     # "finish" functions
 
@@ -623,7 +673,7 @@ class CBTBot(ChatBot):
 
     def finish_success(self):
         """Send a message and go to the default state."""
-        return "Great, that is so good to hear! Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. If you want to talk some more, O-team leaders, the Emmons center, and RAs are confidential sources of help. Your feelings are valid. For now, I suggest " + (
+        return "Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. If you want to talk some more, O-team leaders, the Emmons center, and RAs are confidential sources of help. Your feelings are valid. For now, I suggest " + (
             random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
 
     def finish_thanks(self):
