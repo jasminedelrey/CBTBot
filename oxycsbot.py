@@ -284,13 +284,28 @@ class CBTBot(ChatBot):
                 self.scenario = scenario
                 return self.go_to_state('specific_scenario')
             else:
-                return self.finish_confused()
+                return self.go_to_state('unknown_scenario')
 
+    def on_enter_unknown_scenario(self):
+        return "It seems like this feeling is not cause by a specific scenario. Lets try to see if there are any underlying beliefs that make you feel this way. What negative core beliefs make you feel this way"
+    def respond_from_unknown_scenario(self, message, tags):
+        for cb in self.CORE_BELIEFS:
+            if cb in tags:
+                self.cb = cb
+                return self.go_to_state('specific_cb')
+        return self.go_to_state('unknown_cb')
 
 
     def on_enter_unknown_emotion(self):
         """Send a message when entering the "unknown_emotion" state."""
-        return "I am not sure if I understand. Could you elaborate on what you're feeling now?"
+        return "I am not sure if I understand. Try to think of specific emotions that you are feeling. \nHave you recently, or are you currently, struggling with any of the following emotions?\n" \
+               "anxiety \n" \
+               "isolation \n" \
+               "worthlessness \n" \
+               "worry \n" \
+               "unpreparedness \n" \
+               "lost \n" \
+               "depressed \n"
 
     def respond_from_unknown_emotion(self, message, tags):
         """Decide what state to go to from the "unknown_emotion" state.
@@ -385,34 +400,41 @@ class CBTBot(ChatBot):
             "Feeling like you are", self.cb, "seems like a negative core belief. Lets challenge that. Think of a time when you felt the opposite of this negative feeling..."
         ])
     def respond_from_specific_cb(self, message, tags):
-        for cb in self.CORE_BELIEFS:
-            if cb in tags:
-                self.cb = cb
-                return self.go_to_state('specific_cb')
-        return self.go_to_state('unknown_cb')
+        self.go_to_state('unknown_cb')
+
+    def on_enter_challenge_emotion(self):
+        """Send a message when entering the "unrecognized_faculty" state."""
+        return ' '.join([
+            "Think of a time of where you felt the opposite. You felt loved, confident, and you felt others saw you in this light. Describe any time where you felt smart, capable and loved. ",
+            "Or describe a time where you felt loved and respected by others. Start with 'I am'.",
+        ])
+
+    def respond_from_challenge_emotion(self, message, tags):
+        """Decide what state to go to from the "unrecognized_faculty" state.
+        Parameters:
+            message (str): The incoming message.
+            tags (Mapping[str, int]): A count of the tags that apply to the message.
+        Returns:
+            str: The message to send to the user.
+        """
+        if "I am" in tags:
+            return self.go_to_state('check_feeling')
+        else:
+            return self.finish('breathing')
+
 
     def on_enter_unknown_cb(self):
-        """Send a message when entering the "unknown_cb" state."""
+        """Send a message when entering the "" staunknown_cbte."""
         return "I am not sure if I understand. Core beliefs are what we believe about ourselves that influence how we interpret our experiences. \n" \
                "If our core beliefs are negative, they will negatively impact how we see others, the world, ourselves, and our future. \n" \
                "Here are some common negative beliefs. If you suffer from any of these cognitive beliefs, please type it. \n" \
                "not enough \n not prepared \n undeserving \n unlovable \n abnormal \n failure "
 
     def respond_from_unknown_cb(self, message, tags):
-        """Decide what state to go to from the "unknown_emotion" state.
-
-        Parameters:
-            message (str): The incoming message.bnh
-            tags (Mapping[str, int]): A count of the tags that apply to the message.
-
-        Returns:
-            str: The message to send to the user.
-        """
-
         self.cb = None
         for cb in self.CORE_BELIEFS:
             if cb in tags:
-                self.emotion = cb
+                self.cb = cb
                 return self.go_to_state('specific_cb')
         return self.go_to_state('unknown_cb')
 
