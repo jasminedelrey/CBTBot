@@ -393,8 +393,16 @@ class CBTBot(ChatBot):
                 return self.go_to_state('unknown_scenario')
 
     def on_enter_unknown_emotion(self):
-        """Send a message when entering the "unknown_faculty" state."""
-        return "I see. Could you elaborate on what you're feeling now?"
+
+        return "I am not sure if I understand. Try to think of specific emotions that you are feeling. " 
+        "\n Have you recently, or are you currently, struggling with any of the following emotions? \n"
+        "anxiety \n"
+        "isolation \n"
+        "worthlessness \n"
+        "worry \n"
+        "unpreparedness \n"
+        "lost \n"
+        "depressed \n"
 
     def respond_from_unknown_emotion(self, message, tags):
         """Decide what state to go to from the "unknown_faculty" state.
@@ -409,7 +417,7 @@ class CBTBot(ChatBot):
             if emotion in tags:
                 self.emotion = emotion
                 return self.go_to_state('specific_scenario')
-        return self.go_to_state('unknown_scenario')
+        return self.go_to_state('unknown_emotion')
 
 
     def on_enter_specific_scenario(self):
