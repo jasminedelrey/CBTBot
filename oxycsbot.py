@@ -232,7 +232,7 @@ class CBTBot(ChatBot):
     ASSIGNMENTS = {'going to a place of worship.', 'volunteering for a cause you believe in.', 'going to the park.',
                    'going for a walk.', 'going out for dinner.', 'calling friends and/or family.',
                    'going out with friends and/or family.', 'working out.', 'getting immersed in art.', 'dancing.',
-                   'singing.', 'watching your favorite movie.'}
+                   'singing.', 'watching your favorite movie.', 'journaling your thoughts.'}
 
 
     def __init__(self):
