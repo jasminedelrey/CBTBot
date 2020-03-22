@@ -3,6 +3,8 @@
 with distressing thoughts of their first year of college."""
 
 from chatbot import ChatBot
+import secrets
+import random
 
 
 class CBTBot(ChatBot):
@@ -17,9 +19,23 @@ class CBTBot(ChatBot):
         'unknown_emotion',
         'specific_scenario',
         'unknown_scenario',
-        'unknown_CD',
-        'specific_CD',
+        'confused_scenario',
+        'find_campus_help',
+        'breathing1',
+        'breathing2',
+        'breathing3',
+        'breathing_confused2',
+        'breathing_confused3',
+        'unknown_cd',
+        'specific_cd',
         'challenge_emotion',
+        'cd_wave2',
+        'cd_wave3',
+        'find_campus_help',
+        'confused_campus_help',
+        'specific_area',
+        'check_feeling',
+        'breathing'
     ]
 
     TAGS = {
@@ -87,6 +103,11 @@ class CBTBot(ChatBot):
         'yep': 'yes',
         'no': 'no',
         'nope': 'no',
+        "y": "y",
+        "I am": "I am",
+        "i am": "I am",
+        "iam": "I am",
+        "Iam": "I am",
 
         #scenarios
         'roommates': 'roommate',
@@ -135,6 +156,20 @@ class CBTBot(ChatBot):
         'not capable': 'overgeneralization',
         "don't believe": 'emotional reasoning',
 
+        'religious': 'religious',
+        'cultural': 'cultural',
+        'academic': 'academic',
+        'personal': 'personal',
+        'residential': 'residential',
+
+        'religious': 'religious',
+        'race': 'race' ,
+        'different': 'different',
+        'academic': 'academic',
+        'social': 'social',
+        'friends': 'friends',
+        'cultural': 'cultural',
+
 
     }
 
@@ -163,6 +198,14 @@ class CBTBot(ChatBot):
         'academic',
         'hard',
 
+        'religious',
+        'race',
+        'different',
+        'academic',
+        'social',
+        'friends',
+        'cultural',
+
 
     ]
 
@@ -185,6 +228,12 @@ class CBTBot(ChatBot):
 
 
     }
+
+    ASSIGNMENTS = {'going to a place of worship.', 'volunteering for a cause you believe in.', 'going to the park.',
+                   'going for a walk.', 'going out for dinner.', 'calling friends and/or family.',
+                   'going out with friends and/or family.', 'working out.', 'getting immersed in art.', 'dancing.',
+                   'singing.', 'watching your favorite movie.'}
+
 
     def __init__(self):
         """Initialize the OxyCSBot.
@@ -248,39 +297,16 @@ class CBTBot(ChatBot):
         }
         return responses[cd]
 
-    def get_scenario(self, scenario):
+    def get_campus_help(self, area):
         responses = {
-        'roommate': "I see. Have you talked with Res Ed about what we can do?",
-        'cultural':
-        'homesick': "Herrick is a great resource.",
-        'lost': "duck.",
-        'academic': "llama.",
-        'hard': "",
-        'alone': "what.",
-        'class':,
-        'adjust':,
+        'religious': 'The folks over at the Herrick Interfaith Center host several groups that foster a community within different religions and beliefs.',
+        'cultural': 'If you head over to SLICE, Student Leadership, Involvement, & Community Engagement, they can redirect you to clubs on campus that foster communities within cultural groups. You can also reach out to Oxy students of an interest you dont find represented.',
+        'academic': 'Your professor is a great resource. Oxys education emphasizes the bond between student and professor. If you cant find help from them, there are student peer learners that can help you with a class your struggling.',
+        'personal': 'The Emmons center houses professional therapists and workers that serve as helpful, confidential ears. Theyre here to help. They offer FREE sessions.',
+        'residential': 'The Office of Residential Education can help you sort out any insecurities you may have with your housing. Room swap is a process several Oxy students utilize to switch to different dorms that better fit them.',
         }
-        return responses[scenario]
+        return responses[area]
 
-
-    # def get_cd(self, core_belief):
-    #     responses = {
-    #         'always': "Let's challenge that notion of 'always'. But it's normal to feel this way. Can you think of times "
-    #         'reject':
-    #         'hopeless':
-    #         'not enough':
-    #         'dumb':
-    #         'never':
-    #         'bad':
-    #     }
-
-        # return responses[core_belief]
-
-    # def get_school_help(self, cd):
-    #     responses = {
-    #
-    #     }
-    #     return responses[]
 
 
     # "waiting" state functions
@@ -353,15 +379,14 @@ class CBTBot(ChatBot):
         for emotion in self.EMOTION:
             if emotion in tags:
                 self.emotion = emotion
-                return self.go_to_state('specific_emotion')
-        return self.go_to_state('unknown_emotion')
+                return self.go_to_state('specific_scenario')
+        return self.go_to_state('specific_scenario')
 
     # "unrecognized_faculty" state functions
 
     def on_enter_specific_scenario(self):
         """Send a message when entering the "specific_scenario" state."""
         response = '\n'.join([
-            f"{self.get_scenario(self.scenario)}."
             " Ok. It is good to understand a specific time that you felt this way."
             ' Lets dive into what makes you feel this way. '
             ' What core beliefs are instilled in these times in your life?'
@@ -401,8 +426,8 @@ class CBTBot(ChatBot):
     def on_enter_challenge_emotion(self):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
-            "I'm not sure I understand - are you looking for",
-            "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
+            "Think of a time of where you felt the opposite. You felt loved, confident, and you felt others saw you in this light. Describe any time where you felt smart, capable and loved. ",
+            "Or describe a time where you felt loved and respected by others. Start with 'I am'.",
         ])
 
     def respond_from_challenge_emotion(self, message, tags):
@@ -415,11 +440,10 @@ class CBTBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        for emotion in self.EMOTIONS:
-            if emotion in tags:
-                self.emotion = emotion
-                return self.go_to_state('specific_emotion')
-        return self.finish('emotion')
+        if "I am" in tags:
+            return self.go_to_state('check_feeling')
+        else:
+            return self.finish('breathing')
 
     def on_enter_cd_wave2(self):
         """Send a message when entering the "unrecognized_faculty" state."""
@@ -474,21 +498,49 @@ class CBTBot(ChatBot):
                 return self.go_to_state('find_campus_help')
 
     def on_enter_find_campus_help(self):
-        return "Thank you for sharing your feelings. This is the first step towards molding more positive thought patterns for your day to day life. I think that other campus resources will monumentally help you work through these feelings. Would you like to someone about religious, cultural, personal, or academic matters?"
+        return "Thank you for sharing your feelings. This is the first step towards molding more positive thought patterns for your day to day life. I think that other campus resources will monumentally help you work through these feelings. Would you like to someone about religious, cultural, personal, residential, or academic matters?"
 
     def respond_find_campus_help(self, message, tags):
-        for area in self.SCENARIOS:
-            if scenario in tags:
-                self.scenario = scenario
-                return self.go_to_state('specific_scenario')
+        for area in self.AREAS:
+            if area in tags:
+                self.area = area
+                return self.go_to_state('specific_area')
             else:
-                return self.go_to_state('find_campus_help')
+                return self.go_to_state('confused_campus_help')
+
+    def on_enter_specific_area(self):
+        return f"{self.get_campus_help(self.area)}. Did you find what you're looking for?"
+
+    def respond_from_specific_area(self, message, tags):
+        if 'yes' in tags:
+            return self.finish('success')
+        else:
+            return self.go_to_state('breathing')
+
+
+    def on_enter_confused_campus_help(self):
+        return "I'm sorry. I don't understand. Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, or academic matters?"
+
+    def respond_from_confused_campus_help(self, message, tags):
+        if 'yes' in tags:
+            return self.finish('success')
+        else:
+            return self.go_to_state('breathing')
+
+    def on_enter_check_feeling(self):
+        return "It is helpful to take in moments in our life in a positive light. And to remember to practice self-compassion. Do you feel better?"
+
+    def respond_from_check_feeling(self, message, tags):
+        if 'yes' in tags:
+            return self.finish('success')
+        else:
+            return self.go_to_state('breathing1')
 
 
 
     #breathing exercise
     def on_enter_breathing1(self):
-        return "When feeling distressed, breathing is important. Can you slowly inhale and exhale with me? Inhale for 2 seconds. (Respond with 'y' when you have)"
+        return "I'm sorry I couldn't be of any help. When feeling distressed, breathing is important. Can you slowly inhale and exhale with me? Inhale for 2 seconds. (Respond with 'y' when you have)"
 
     def respond_from_breathing1(self, message, tags):
         if 'y' in tags:
@@ -519,7 +571,7 @@ class CBTBot(ChatBot):
 
     def respond_from_breathing_confused3(self, message, tags):
         if 'y' in tags:
-            return self.go_to_state('homework')
+            return self.finish('homework')
         else:
             return self.go_to_state('breathing_confused3')
 
@@ -537,29 +589,20 @@ class CBTBot(ChatBot):
 
     # "finish" functions
 
-
     def finish_confused(self):
         """Send a message and go to the default state."""
-        return "Sorry, I'm just a simple bot that can't understand much. You can ask me about office hours though!"
+        return "Sorry, I'm confused. Could you explain more?"
 
     def finish_homework(self):
-        return "Ok."
+        return "Great! The process of understanding our feelings takes time. Come back again if you feel distressed again. Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. For now, I suggest " + (random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
 
     def finish_homework_fail(self):
-        return "I'm sorry you feel that way."
-
-    def finish_location(self):
-        """Send a message and go to the default state."""
-        return "I am finished."
-        # return f"{self.professor.capitalize()}'s office is in {self.get_office(self.professor)}"
+        return "I'm sorry you feel that way. The process of understanding our feelings takes time. Come back again if you feel distressed again. Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. For now, I suggest " + (random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
 
     def finish_success(self):
         """Send a message and go to the default state."""
-        return 'Great, that is so good to hear! If you want to talk some more, O-team leaders, the Emmons center, and RAs are confidential sources of help. Your feelings are valid.'
+        return "Great, that is so good to hear! Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. If you want to talk some more, O-team leaders, the Emmons center, and RAs are confidential sources of help. Your feelings are valid. For now, I suggest " + (random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
 
-    def finish_fail(self):
-        """Send a message and go to the default state."""
-        return "I've tried my best but I still don't understand. Maybe try asking other students?"
 
     def finish_thanks(self):
         """Send a message and go to the default state."""
