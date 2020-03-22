@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+
+# !/usr/bin/env python3
 """A simple chatbot that utilizes Cognitive Behavioral Therapy to help first-generation students
 with distressing thoughts of their first year of college."""
 
@@ -15,27 +16,29 @@ class CBTBot(ChatBot):
 
     STATES = [
         'waiting',
-        'specific_emotion',
-        'unknown_emotion',
-        'specific_scenario',
-        'unknown_scenario',
-        'confused_scenario',
-        'find_campus_help',
-        'breathing1',
-        'breathing2',
-        'breathing3',
-        'breathing_confused2',
-        'breathing_confused3',
-        'unknown_cd',
-        'specific_cd',
-        'challenge_emotion',
-        'cd_wave2',
-        'cd_wave3',
-        'find_campus_help',
-        'confused_campus_help',
-        'specific_area',
-        'check_feeling',
-        'breathing'
+       'specific_emotion',
+       'unknown_emotion',
+       'specific_scenario',
+       'unknown_scenario',
+       'confused_scenario',
+       'find_campus_help',
+       'breathing1',
+       'breathing2',
+       'breathing3',
+       'breathing_confused2',
+       'breathing_confused3',
+       'unknown_cd',
+       'specific_cd',
+       'unknown_cb',
+       'specific_cb',
+       'challenge_emotion',
+       'cd_wave2',
+       'cd_wave3',
+       'find_campus_help',
+       'confused_campus_help',
+       'specific_area',
+       'check_feeling',
+
     ]
 
     TAGS = {
@@ -44,26 +47,21 @@ class CBTBot(ChatBot):
         'feel': 'help',
         'am': 'help',
         '': 'help',
-        'hello':'help',
-        'hi':'help',
-
-        'roommate': 'moment',
-        'roommates': 'moment',
-        'homesick': 'moment',
-        'home': 'moment',
-        'lost': 'moment',
-        'academic': 'moment',
-        'hard': 'moment',
-        'alone': 'moment',
+        'hello': 'help',
+        'hi': 'help',
 
         # emotions
-        'anxiety': 'anxious',
-        'anxious': 'anxiety',
+        'anxiety': 'anxiety',
         'homesick': 'homesick',
-        'isolated': 'isolation',
+        'home': 'homesick',
+        'family': 'homesick',
+        'miss family': 'homesick',
+        'miss my family': 'homesick',
+        'anxious': 'anxiety',
+        'isolated': 'isolated',
         'isolation': 'isolated',
         'worthless': 'worthless',
-        'worried': 'worry',
+        'worried': 'worried',
         'worry': 'worried',
         'sad': 'sad',
         'depressed': 'depressed',
@@ -73,10 +71,10 @@ class CBTBot(ChatBot):
         'angry': 'angry',
         'unprepared': 'unprepared',
         'emptiness': 'empty',
-        'empty': 'emptiness',
+        'empty': 'empty',
         'lost': 'lost',
 
-        #cogntive distortions
+        # cogntive distortions
         'filtering': 'filtering',
         'polarized thinking': 'polarized thinking',
         'control fallacies': 'control fallacies',
@@ -109,52 +107,30 @@ class CBTBot(ChatBot):
         "iam": "I am",
         "Iam": "I am",
 
-        #scenarios
+        # scenarios
         'roommates': 'roommate',
         'room mate': 'roommate',
         'roommate': 'roommate',
         'living': 'roommate',
-        'homesick': 'homesick',
-        'home': 'home',
         'lost': 'lost',
         'academic': 'academic',
         'hard': 'hard',
         'alone': 'alone',
+        'class': 'class',
+        'school': 'class',
         'imposter': 'imposter',
         'not smart': 'imposter',
         'dumb': 'imposter',
         'deserve': 'imposter',
 
-        #cognitive distortion
-        'class': 'filtering',
-        'classes': 'filtering',
-        'grade': 'filtering',
-        'grades': 'filtering',
-        'friends': 'interpersonal fallacy',
-        'other people': 'interpersonal fallacy',
-        'never':'catastrophizing',
-        'everyone': 'overgeneralization',
-        'different': 'interpersonal fallacy',
-        'stupid': 'interpersonal fallacy',
-        'smarter': 'personalization',
-        'not enough': 'emotional reasoning',
-        'not prepared': 'emotional reasoning',
-        'imposter': 'filtering',
-        'unlovable': 'personalization',
-        'abnormal': 'personalization',
-        'not confident': 'emotional reasoning',
-        'should': 'should statement',
-        'succeed': 'catastrophizing',
-        'success': 'catastrophizing',
-        'job': 'catastrophizing',
-        'internship': 'catastrophizing',
-        'weird': 'interpersonal fallacy',
-        'judge': 'interpersonal fallacy',
-        'drop out': 'catastrophizing',
-        'wrong': 'personalization',
-        'undermine': 'emotional reasoning',
-        'not capable': 'overgeneralization',
-        "don't believe": 'emotional reasoning',
+        # CORE BELIEF
+        'not enough': 'not enough',
+        'not prepared': 'not prepared',
+        'not good enough': 'not good enough',
+        'undeserving': 'undeserving',
+        'unlovable': 'unlovable',
+        'abnormal': 'abnormal',
+        'failure': 'failure',
 
         'religious': 'religious',
         'cultural': 'cultural',
@@ -163,7 +139,7 @@ class CBTBot(ChatBot):
         'residential': 'residential',
 
         'religious': 'religious',
-        'race': 'race' ,
+        'race': 'race',
         'different': 'different',
         'academic': 'academic',
         'social': 'social',
@@ -175,12 +151,12 @@ class CBTBot(ChatBot):
 
     EMOTIONS = [
         'anxiety',
-        'homesick',
         'isolated',
         'worthless',
         'worried',
         'sad',
         'scared',
+        'homesick',
         'tired',
         'annoyed',
         'angry',
@@ -191,13 +167,11 @@ class CBTBot(ChatBot):
 
     SCENARIOS = [
         'roommate',
-        'homesick',
         'class',
         'home',
         'lost',
         'academic',
         'hard',
-
         'religious',
         'race',
         'different',
@@ -206,27 +180,26 @@ class CBTBot(ChatBot):
         'friends',
         'cultural',
 
-
     ]
 
-    CD = {
+    CORE_BELIEFS = {
+        'not enough',
+        'not prepared',
+        'not good enough',
+        'undeserving',
+        'unlovable',
+        'abnormal',
+        'failure',
+    }
+
+    DISTORTIONS = {
         'filtering',
-        'polarized thinking',
-        'control fallacies',
-        'fallacy of fallacies',
-        'overgeneralization',
-        'emotional reasoning',
-        'fallacy of change',
-        'shoulds',
+        'interpersonal fallacy',
         'catastrophizing',
-        'heavens reward fallacy',
-        'always being right',
+        'overgeneralization',
         'personalization',
-        'jump to conclusions',
-        'blaming',
-        'global labeling',
-
-
+        'emotional reasoning',
+        'should statement',
     }
 
     ASSIGNMENTS = {'going to a place of worship.', 'volunteering for a cause you believe in.', 'going to the park.',
@@ -234,27 +207,62 @@ class CBTBot(ChatBot):
                    'going out with friends and/or family.', 'working out.', 'getting immersed in art.', 'dancing.',
                    'singing.', 'watching your favorite movie.', 'journaling your thoughts.'}
 
-
     def __init__(self):
         """Initialize the OxyCSBot.
-
         The `emotion` member variable stores whether the target emotion has
         been identified.
         """
         super().__init__(default_state='waiting')
         self.emotion = None
+        self.emotion = None
+        self.scenario = None
+        self.cb = None
+        self.cd = None
+
+    def get_cb_distortion(self, cb):
+
+        responses = {
+            'class': 'filtering',
+            'classes': 'filtering',
+            'grade': 'filtering',
+            'grades': 'filtering',
+            'friends': 'interpersonal fallacy',
+            'other people': 'interpersonal fallacy',
+            'never': 'catastrophizing',
+            'everyone': 'overgeneralization',
+            'different': 'interpersonal fallacy',
+            'stupid': 'interpersonal fallacy',
+            'smarter': 'personalization',
+            'not enough': 'emotional reasoning',
+            'not prepared': 'emotional reasoning',
+            'imposter': 'filtering',
+            'unlovable': 'personalization',
+            'abnormal': 'personalization',
+            'not confident': 'emotional reasoning',
+            'should': 'should statement',
+            'succeed': 'catastrophizing',
+            'success': 'catastrophizing',
+            'job': 'catastrophizing',
+            'internship': 'catastrophizing',
+            'weird': 'interpersonal fallacy',
+            'judge': 'interpersonal fallacy',
+            'drop out': 'catastrophizing',
+            'wrong': 'personalization',
+            'undermine': 'emotional reasoning',
+            'not capable': 'overgeneralization',
+            "don't believe": 'emotional reasoning',
+        }
+        return responses[cb]
 
     def get_emotion(self, emotion):
         """Find the office hours of a professor.
-
         Arguments:
             emotion (str): The emotion of interest.
-
         Returns:
             str: The office hours of that professor.
         """
         responses = {
-            'anxiety': 'Im sorry that you feel this way. Can you give us an example of when you felt anxious?',
+            'anxiety': "I'm sorry that you feel this way. Can you give us an example of when you felt anxious?",
             'homesick': "Being away from your support system is challenging. What about campus life makes you miss home?",
             'isolated': "I hear your point; college is very different from what we're used to. What are times that you feel isolated?",
             'worthless': "I know that this isn't an easy topic. I appreciate you for sharing. What makes you feel this way? ",
@@ -265,8 +273,8 @@ class CBTBot(ChatBot):
             'annoyed': "What are some things that makes you feel this way?",
             'angry': "It is understandable to have moments of anger, but remember that it is healthy to get rid of this anger. What makes you angered?",
             'unprepared': '\n'.join
-                    ("Transitioning to college can be a big step up, so it is common to feel like you are not prepared. "
-                    "Are there certain times that make you feel unprepared or do you always feel this way?"),
+            ("Transitioning to college can be a big step up, so it is common to feel like you are not prepared. "
+             "Are there certain times that make you feel unprepared or do you always feel this way?"),
             'empty': "Remember that you are an incredible human being full of unique experiences that make you ‘you’. Have you felt this way before or did something happen that made you feel empty?",
             'lost': "You don’t need to have every aspect of your life planned out, remember that college is a time of exploration and discovery. What makes you feel lost?",
             'bad': "It is normal to feel bad sometimes, but remember to not let it define your day. Did a certain event happen that made you feel bad?",
@@ -277,12 +285,10 @@ class CBTBot(ChatBot):
     # filtering, interpersonal fallacy, catastrophizing, overgeneralization, personalization,
     # emotional reasoning, should statement
 
-    def get_cd(self, cd):
+    def get_cd(self, cb):
         """Find the office hours of a professor.
-
         Arguments:
-            cd (str): The emotion of interest.
-
+            cb (str): The emotion of interest.
         Returns:
             str: The office hours of that professor.
         """
@@ -295,29 +301,25 @@ class CBTBot(ChatBot):
             'emotional reasoning': 'A key part of Cognitive Behavioral Therapy is shaping your thoughts to healthily affect your actions and behavior. Do you often feel like you negatively assume others intentions?',
             'should statement': 'Setting healthy goals is important. If you feel like you SHOULD always be doing something, your thoughts may end up punishing yourself beforehand. Do you often set up strict expectations for yourself?',
         }
-        return responses[cd]
+        return responses[cb]
 
     def get_campus_help(self, area):
         responses = {
-        'religious': 'The folks over at the Herrick Interfaith Center host several groups that foster a community within different religions and beliefs.',
-        'cultural': 'If you head over to SLICE, Student Leadership, Involvement, & Community Engagement, they can redirect you to clubs on campus that foster communities within cultural groups. You can also reach out to Oxy students of an interest you dont find represented.',
-        'academic': 'Your professor is a great resource. Oxys education emphasizes the bond between student and professor. If you cant find help from them, there are student peer learners that can help you with a class your struggling.',
-        'personal': 'The Emmons center houses professional therapists and workers that serve as helpful, confidential ears. Theyre here to help. They offer FREE sessions.',
-        'residential': 'The Office of Residential Education can help you sort out any insecurities you may have with your housing. Room swap is a process several Oxy students utilize to switch to different dorms that better fit them.',
+            'religious': 'The folks over at the Herrick Interfaith Center host several groups that foster a community within different religions and beliefs.',
+            'cultural': 'If you head over to SLICE, Student Leadership, Involvement, & Community Engagement, they can redirect you to clubs on campus that foster communities within cultural groups. You can also reach out to Oxy students of an interest you dont find represented.',
+            'academic': 'Your professor is a great resource. Oxys education emphasizes the bond between student and professor. If you cant find help from them, there are student peer learners that can help you with a class your struggling.',
+            'personal': 'The Emmons center houses professional therapists and workers that serve as helpful, confidential ears. Theyre here to help. They offer FREE sessions.',
+            'residential': 'The Office of Residential Education can help you sort out any insecurities you may have with your housing. Room swap is a process several Oxy students utilize to switch to different dorms that better fit them.',
         }
         return responses[area]
-
-
 
     # "waiting" state functions
 
     def respond_from_waiting(self, message, tags):
         """Decide what state to go to from the "waiting" state.
-
         Parameters:
             message (str): The incoming message.
             tags (Mapping[str, int]): A count of the tags that apply to the message.
-
         Returns:
             str: The message to send to the user.
         """
@@ -342,24 +344,18 @@ class CBTBot(ChatBot):
 
     def respond_from_specific_emotion(self, message, tags):
         """Decide what state to go to from the "specific_faculty" state.
-
         Parameters:
             message (str): The incoming message.
             tags (Mapping[str, int]): A count of the tags that apply to the message.
-
         Returns:
             str: The message to send to the user.
         """
-        self.scenario = None
         for scenario in self.SCENARIOS:
             if scenario in tags:
                 self.scenario = scenario
                 return self.go_to_state('specific_scenario')
             else:
-                return self.finish_confused()
-
-            return self.finish_confused()
-
+                return self.go_to_state('unknown_scenario')
 
     def on_enter_unknown_emotion(self):
         """Send a message when entering the "unknown_faculty" state."""
@@ -367,22 +363,19 @@ class CBTBot(ChatBot):
 
     def respond_from_unknown_emotion(self, message, tags):
         """Decide what state to go to from the "unknown_faculty" state.
-
         Parameters:
             message (str): The incoming message.
             tags (Mapping[str, int]): A count of the tags that apply to the message.
-
         Returns:
             str: The message to send to the user.
         """
-
-        for emotion in self.EMOTION:
+        self.emotion = None
+        for emotion in self.EMOTIONS:
             if emotion in tags:
                 self.emotion = emotion
                 return self.go_to_state('specific_scenario')
-        return self.go_to_state('specific_scenario')
+        return self.go_to_state('unknown_scenario')
 
-    # "unrecognized_faculty" state functions
 
     def on_enter_specific_scenario(self):
         """Send a message when entering the "specific_scenario" state."""
@@ -396,24 +389,40 @@ class CBTBot(ChatBot):
         return response
 
     def respond_from_specific_scenario(self, message, tags):
-        for cd in self.CD:
-            if cd in tags:
-                self.cd = cd
-                return self.go_to_state('specific_cd')
-        return self.go_to_state('cd_wave2')
+        for cb in self.CORE_BELIEFS:
+            if cb in tags:
+                self.cb = cb
+                return self.go_to_state('specific_cb')
+        return self.go_to_state('unknown_cb')
 
+    def on_enter_unknown_scenario(self):
+        return "It seems like this feeling is not cause by a specific scenario. Try to think of a specific time when you felt this way. Maybe you have had problems with homesickness, roomates, academics, or imposter syndrome. ((Lets try to see if there are any underlying beliefs that make you feel this way. What negative core beliefs make you feel this way?))"
+
+    def respond_from_unknown_scenario(self, message, tags):
+        return self.go_to_state('specific_scenario')
+
+    def on_enter_specific_cb(self):
+        """Send a message when entering the "unrecognized_faculty" state."""
+        return ' '.join([
+            "Feeling like you are", self.cb,
+            "seems like a negative core belief. Lets dive deeper." + self.get_cd(self.get_cb_distortion(self.cb))
+        ])
+
+    def respond_from_specific_cb(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('challenge_emotion')
+        else:
+            return self.go_to_state('cd_wave2')
 
     def on_enter_specific_cd(self):
         """Send a message when entering the "unrecognized_faculty" state."""
-        return self.get_cd(self.cd)
+        return self.get_cd(self.cb)
 
     def respond_from_specific_cd(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
-
         Parameters:
             message (str): The incoming message.
             tags (Mapping[str, int]): A count of the tags that apply to the message.
-
         Returns:
             str: The message to send to the user.
         """
@@ -422,6 +431,25 @@ class CBTBot(ChatBot):
             return self.go_to_state('challenge_emotion')
         else:
             return self.go_to_state('cd_wave2')
+
+    # def on_enter_unknown_cd(self):
+    #         """Send a message when entering the "unrecognized_faculty" state."""
+    #     return "Thank you for sharing your feelings. I am here to listen. Could you explain a certain scenario that is making you feel uncomfortable?"
+    #
+    # def respond_from_unknown_cd(self, message, tags):
+    #         """Decide what state to go to from the "unrecognized_faculty" state.
+    #         Parameters:
+    #             message (str): The incoming message.
+    #             tags (Mapping[str, int]): A count of the tags that apply to the message.
+    #         Returns:
+    #             str: The message to send to the user.
+    #         """
+    #     for scenario in self.SCENARIOS:
+    #         if scenario in tags:
+    #             self.scenario = scenario
+    #             return self.go_to_state('specific_scenario')
+    #         else:
+    #             return self.go_to_state('confused_scenario')
 
     def on_enter_challenge_emotion(self):
         """Send a message when entering the "unrecognized_faculty" state."""
@@ -432,11 +460,9 @@ class CBTBot(ChatBot):
 
     def respond_from_challenge_emotion(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
-
         Parameters:
             message (str): The incoming message.
             tags (Mapping[str, int]): A count of the tags that apply to the message.
-
         Returns:
             str: The message to send to the user.
         """
@@ -451,40 +477,40 @@ class CBTBot(ChatBot):
 
     def respond_from_cd_wave2(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
-
         Parameters:
             message (str): The incoming message.
+            tags (Mapping[str, int]): A count of the tags that apply to the message.
+        Returns:
+            str: The message to send to the user.
+        """
+        for cb in self.CORE_BELIEFS:
+            if cb in tags:
+                self.cb = cb
+                return self.go_to_state('specific_cb')
+        return self.go_to_state('unknown_cb')
+
+    def on_enter_unknown_cb(self):
+        """Send a message when entering the "" staunknown_cbte."""
+        return "I am not sure if I understand. Core beliefs are what we believe about ourselves that influence how we interpret our experiences. \n" \
+               "If our core beliefs are negative, they will negatively impact how we see others, the world, ourselves, and our future. \n" \
+               "Here are some common negative beliefs. If you suffer from any of these cognitive beliefs, please type it. \n" \
+               "not enough \n not prepared \n undeserving \n unlovable \n abnormal \n failure "
+
+    def respond_from_unknown_cb(self, message, tags):
+        """Decide what state to go to from the "unknown_emotion" state.
+
+        Parameters:
+            message (str): The incoming message.bnh
             tags (Mapping[str, int]): A count of the tags that apply to the message.
 
         Returns:
             str: The message to send to the user.
         """
-        for cd in self.CD:
-            if cd in tags:
-                self.cd = cd
-                return self.go_to_state('specific_cd')
-        return self.go_to_state('unknown_cd')
-
-    def on_enter_unknown_cd(self):
-        """Send a message when entering the "unrecognized_faculty" state."""
-        return "Thank you for sharing your feelings. I am here to listen. Could you explain a certain scenario that is making you feel uncomfortable?"
-
-    def respond_from_cd_wave3(self, message, tags):
-        """Decide what state to go to from the "unrecognized_faculty" state.
-
-        Parameters:
-            message (str): The incoming message.
-            tags (Mapping[str, int]): A count of the tags that apply to the message.
-
-        Returns:
-            str: The message to send to the user.
-        """
-        for scenario in self.SCENARIOS:
-            if scenario in tags:
-                self.scenario = scenario
-                return self.go_to_state('specific_scenario')
-            else:
-                return self.go_to_state('confused_scenario')
+        for cb in self.CORE_BELIEFS:
+            if cb in tags:
+                self.cb = cb
+                return self.go_to_state('specific_cb')
+        return self.go_to_state('unknown_cb')
 
     def on_enter_confused_scenario(self):
         return "I can see that this is discomforting to you. What is another time you felt this way?"
@@ -517,7 +543,6 @@ class CBTBot(ChatBot):
         else:
             return self.go_to_state('breathing')
 
-
     def on_enter_confused_campus_help(self):
         return "I'm sorry. I don't understand. Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, or academic matters?"
 
@@ -536,9 +561,7 @@ class CBTBot(ChatBot):
         else:
             return self.go_to_state('breathing1')
 
-
-
-    #breathing exercise
+    # breathing exercise
     def on_enter_breathing1(self):
         return "I'm sorry I couldn't be of any help. When feeling distressed, breathing is important. Can you slowly inhale and exhale with me? Inhale for 2 seconds. (Respond with 'y' when you have)"
 
@@ -584,9 +607,6 @@ class CBTBot(ChatBot):
         else:
             return self.finish('homework_fail')
 
-
-
-
     # "finish" functions
 
     def finish_confused(self):
@@ -594,15 +614,17 @@ class CBTBot(ChatBot):
         return "Sorry, I'm confused. Could you explain more?"
 
     def finish_homework(self):
-        return "Great! The process of understanding our feelings takes time. Come back again if you feel distressed again. Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. For now, I suggest " + (random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
+        return "Great! The process of understanding our feelings takes time. Come back again if you feel distressed again. Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. For now, I suggest " + (
+            random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
 
     def finish_homework_fail(self):
-        return "I'm sorry you feel that way. The process of understanding our feelings takes time. Come back again if you feel distressed again. Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. For now, I suggest " + (random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
+        return "I'm sorry you feel that way. The process of understanding our feelings takes time. Come back again if you feel distressed again. Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. For now, I suggest " + (
+            random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
 
     def finish_success(self):
         """Send a message and go to the default state."""
-        return "Great, that is so good to hear! Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. If you want to talk some more, O-team leaders, the Emmons center, and RAs are confidential sources of help. Your feelings are valid. For now, I suggest " + (random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
-
+        return "Great, that is so good to hear! Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. If you want to talk some more, O-team leaders, the Emmons center, and RAs are confidential sources of help. Your feelings are valid. For now, I suggest " + (
+            random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
 
     def finish_thanks(self):
         """Send a message and go to the default state."""
@@ -611,3 +633,4 @@ class CBTBot(ChatBot):
 
 if __name__ == '__main__':
     CBTBot().chat()
+
