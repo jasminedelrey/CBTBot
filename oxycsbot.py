@@ -41,13 +41,12 @@ class CBTBot(ChatBot):
         'alone': 'moment',
 
         # emotions
-        'anxiety': 'anxious',
+        'anxiety': 'anxiety',
         'anxious': 'anxiety',
-        'homesick': 'homesick',
         'isolated': 'isolation',
         'isolation': 'isolated',
         'worthless': 'worthless',
-        'worried': 'worry',
+        'worried': 'worried',
         'worry': 'worried',
         'sad': 'sad',
         'depressed': 'depressed',
@@ -59,6 +58,16 @@ class CBTBot(ChatBot):
         'emptiness': 'empty',
         'empty': 'emptiness',
         'lost': 'lost',
+
+        # core beliefs
+        'not enough': 'not enough',
+        'not prepared': 'not prepared',
+        'not good enough': 'not good enough',
+        'undeserving': 'undeserving',
+        'unlovable': 'unlovable',
+        'abnormal': 'abnormal',
+        'failure': 'failure',
+
 
         #cogntive distortions
         'filtering': 'filtering',
@@ -102,20 +111,53 @@ class CBTBot(ChatBot):
         'dumb': 'imposter',
         'deserve': 'imposter',
 
-        # core beliefs
-        'not enough': 'not enough',
-        'not prepared': 'not prepared',
-        'not enough': 'not enough',
-        'not prepared':'not prepared',
-        'not good enough':'not good enough',
-        'undeserving':'undeserving',
-        'unlovable':'unlovable',
-        'abnormal': 'abnormal',
-        'failure': 'failure',
 
 
     }
+    CD = {
+        # cognitive distortion
+        'class': 'filtering',
+        'classes': 'filtering',
+        'grade': 'filtering',
+        'grades': 'filtering',
+        'friends': 'interpersonal fallacy',
+        'other people': 'interpersonal fallacy',
+        'never': 'catastrophizing',
+        'everyone': 'overgeneralization',
+        'different': 'interpersonal fallacy',
+        'stupid': 'interpersonal fallacy',
+        'smarter': 'personalization',
+        'not enough': 'emotional reasoning',
+        'not prepared': 'emotional reasoning',
+        'imposter': 'filtering',
+        'not confident': 'emotional reasoning',
+        'should': 'should statement',
+        'succeed': 'catastrophizing',
+        'success': 'catastrophizing',
+        'job': 'catastrophizing',
+        'internship': 'catastrophizing',
+        'weird': 'interpersonal fallacy',
+        'judge': 'interpersonal fallacy',
+        'drop out': 'catastrophizing',
+        'wrong': 'personalization',
+        'undermine': 'emotional reasoning',
+        'not capable': 'overgeneralization',
+        "don't believe": 'emotional reasoning',
 
+        'religious': 'religious',
+        'cultural': 'cultural',
+        'academic': 'academic',
+        'personal': 'personal',
+        'residential': 'residential',
+
+        'religious': 'religious',
+        'race': 'race',
+        'different': 'different',
+        'academic': 'academic',
+        'social': 'social',
+        'friends': 'friends',
+        'cultural': 'cultural',
+    }
     EMOTIONS = [
         'anxiety',
         'homesick',
@@ -155,6 +197,69 @@ class CBTBot(ChatBot):
 
     }
 
+    DISTORTIONS = {
+        'filtering': 'filtering',
+        'polarized thinking': 'polarized thinking',
+        'control fallacies': 'control fallacies',
+        'fallacy of fallacies': 'fallacy of fallacies',
+        'overgeneralization': 'overgeneralization',
+        'emotional reasoning': 'emotional reasoning',
+        'fallacy of change': 'fallacy of change',
+        'shoulds': 'shoulds',
+        'catastrophizing': 'catastrophizing',
+        'heavens reward fallacy': 'heavens reward fallacy',
+        'always being right': 'always being right',
+        'personalization': 'personalization',
+        'jump to conclusions': 'jump to conclusions',
+        'blaming': 'blaming',
+        'global labeling': 'global labeling',
+    }
+
+    def get_cb_distortion(self, cb):
+        responses = {
+            # cognitive distortion
+            'class': 'filtering',
+            'classes': 'filtering',
+            'grade': 'filtering',
+            'grades': 'filtering',
+            'friends': 'interpersonal fallacy',
+            'other people': 'interpersonal fallacy',
+            'never': 'catastrophizing',
+            'everyone': 'overgeneralization',
+            'different': 'interpersonal fallacy',
+            'stupid': 'interpersonal fallacy',
+            'smarter': 'personalization',
+            'not enough': 'emotional reasoning',
+            'not prepared': 'emotional reasoning',
+            'imposter': 'filtering',
+            'not confident': 'emotional reasoning',
+            'should': 'should statement',
+            'succeed': 'catastrophizing',
+            'success': 'catastrophizing',
+            'job': 'catastrophizing',
+            'internship': 'catastrophizing',
+            'weird': 'interpersonal fallacy',
+            'judge': 'interpersonal fallacy',
+            'drop out': 'catastrophizing',
+            'wrong': 'personalization',
+            'undermine': 'emotional reasoning',
+            'not capable': 'overgeneralization',
+            "don't believe": 'emotional reasoning',
+
+            'religious': 'religious',
+            'cultural': 'cultural',
+            'academic': 'academic',
+            'personal': 'personal',
+            'residential': 'residential',
+
+            'religious': 'religious',
+            'race': 'race',
+            'different': 'different',
+            'academic': 'academic',
+            'social': 'social',
+            'friends': 'friends',
+            'cultural': 'cultural',
+        }
     def __init__(self):
         """Initialize the OxyCSBot.
 
@@ -216,16 +321,16 @@ class CBTBot(ChatBot):
         return responses[scenario]
 
 
-    # def get_cd(self, core_belief):
-    #     responses = {
-    #         'always': "Let's challenge that notion of 'always'. But it's normal to feel this way. Can you think of times "
-    #         'reject':
-    #         'hopeless':
-    #         'not enough':
-    #         'dumb':
-    #         'never':
-    #         'bad':
-    #     }
+    def get_cd(self, core_belief):
+        responses = {
+             'always': "Let's challenge that notion of 'always'. But it's normal to feel this way. Can you think of times ",
+             'reject': "plop",
+             'hopeless': "plop",
+             'not enough':"plop",
+             'dumb': "plop",
+             'never': "plop",
+             'bad':"plop",
+         }
 
         # return responses[core_belief]
 
@@ -285,16 +390,6 @@ class CBTBot(ChatBot):
             else:
                 return self.go_to_state('unknown_scenario')
 
-    def on_enter_unknown_scenario(self):
-        return "It seems like this feeling is not cause by a specific scenario. Lets try to see if there are any underlying beliefs that make you feel this way. What negative core beliefs make you feel this way"
-    def respond_from_unknown_scenario(self, message, tags):
-        for cb in self.CORE_BELIEFS:
-            if cb in tags:
-                self.cb = cb
-                return self.go_to_state('specific_cb')
-        return self.go_to_state('unknown_cb')
-
-
     def on_enter_unknown_emotion(self):
         """Send a message when entering the "unknown_emotion" state."""
         return "I am not sure if I understand. Try to think of specific emotions that you are feeling. \nHave you recently, or are you currently, struggling with any of the following emotions?\n" \
@@ -340,12 +435,17 @@ class CBTBot(ChatBot):
 
     def respond_from_specific_scenario(self, message, tags):
         """ If there is a specific scenario, """
+
         for cb in self.CORE_BELIEFS:
             if cb in tags:
                 self.cb = cb
                 return self.go_to_state('specific_cb')
         return self.go_to_state('unknown_cb')
 
+    def on_enter_unknown_scenario(self):
+        return "It seems like this feeling is not cause by a specific scenario. Lets try to see if there are any underlying beliefs that make you feel this way. What negative core beliefs make you feel this way"
+    def respond_from_unknown_scenario(self, message, tags):
+        return self.go_to_state('specific_scenario')
 
     def on_enter_specific_cd(self):
         """Send a message when entering the "unrecognized_faculty" state."""
@@ -388,7 +488,7 @@ class CBTBot(ChatBot):
         self.cd = None
         for cd in self.EMOTIONS:
             if cd in tags:
-                self.emotion = cd
+                self.cd = cd
                 return self.go_to_state('specific_cd')
         return self.go_to_state('unknown_cd')
 
@@ -396,7 +496,7 @@ class CBTBot(ChatBot):
     def on_enter_specific_cb(self):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
-            "Feeling like you are", self.cb, "seems like a negative core belief. Lets challenge that. Think of a time when you felt the opposite of this negative feeling..."
+            "Feeling like you are", self.cb, "seems like a negative core belief. Lets dive deeper." + self.get_cd(self.get_cb_distortion(self.cb))
         ])
     def respond_from_specific_cb(self, message, tags):
         self.go_to_state('unknown_cb')
