@@ -124,8 +124,13 @@ class CBTBot(ChatBot):
         'not confident': 'emotional reasoning',
         'should': 'should statement',
         'succeed': 'catastrophizing',
+        'success': 'catastrophizing',
+        'job': 'catastrophizing',
+        'internship': 'catastrophizing',
         'weird': 'interpersonal fallacy',
         'judge': 'interpersonal fallacy',
+        'drop out': 'catastrophizing',
+        'wrong': 'personalization',
 
 
     }
@@ -230,13 +235,13 @@ class CBTBot(ChatBot):
             str: The office hours of that professor.
         """
         responses = {
-            'filtering': '',
-            'interpersonal fallacy': '',
-            'catastrophizing': '',
-            'overgeneralization': '',
-            'personalization': 'Sometimes things are out of your control. And that is completely ok.',
-            'emotional reasoning': '',
-            'should statement': '',
+            'filtering': 'I understand. Its important to remember that theres a wider scope to things. Do you think that you often forget about the positive aspects of day to day frustrations?',
+            'interpersonal fallacy': 'You seem to be a hard worker. Its easy to forget to direct energy back to your wellbeing. Is comparing yourself to others a common occurrence?',
+            'catastrophizing': 'I see. When things dont go our way, we often question if this happened because of us. These moments arent bad nor are they wrong. Do you often overthink worst scenarios?',
+            'overgeneralization': 'Your feelings are valid. Theres a Japanese saying, ichi-go ichi-e. Every moment is unique and unrepeatable. Not all mistakes are bad and can predict other unique scenarios you find yourself in. Do you often think that one mistake is indicative of your abilities?',
+            'personalization': 'Sometimes things are out of your control. And that is completely ok. No one deserves to take on the weight of the world singlehandedly. Do you often find yourself blaming yourself for external occurrences?',
+            'emotional reasoning': 'A key part of Cognitive Behavioral Therapy is shaping your thoughts to healthily affect your actions and behavior. Do you often feel like you negatively assume others intentions?',
+            'should statement': 'Setting healthy goals is important. If you feel like you SHOULD always be doing something, your thoughts may end up punishing yourself beforehand. Do you often set up strict expectations for yourself?',
         }
         return responses[cd]
 
@@ -370,35 +375,9 @@ class CBTBot(ChatBot):
         return self.go_to_state('unknown_cd')
 
 
-    # def on_enter_specific_cb(self):
-    #     """Send a message when entering the "unrecognized_faculty" state."""
-    #     return ' '.join([
-    #         "I'm not sure I understand - are you looking for",
-    #         "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
-    #     ])
-    #
-    # def respond_from_specific_cb(self, message, tags):
-    #     """Decide what state to go to from the "unrecognized_faculty" state.
-    #
-    #     Parameters:
-    #         message (str): The incoming message.
-    #         tags (Mapping[str, int]): A count of the tags that apply to the message.
-    #
-    #     Returns:
-    #         str: The message to send to the user.
-    #     """
-    #     for emotion in self.EMOTIONS:
-    #         if emotion in tags:
-    #             self.emotion = emotion
-    #             return self.go_to_state('specific_emotion')
-    #     return self.finish('emotion')
-
     def on_enter_specific_cd(self):
         """Send a message when entering the "unrecognized_faculty" state."""
-        return ' '.join([
-            "I'm not sure I understand - are you looking for",
-            "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
-        ])
+        return self.get_cd(self.cd)
 
     def respond_from_specific_cd(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
@@ -410,11 +389,11 @@ class CBTBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        for emotion in self.EMOTIONS:
-            if emotion in tags:
-                self.emotion = emotion
-                return self.go_to_state('specific_emotion')
-        return self.finish('emotion')
+
+        if 'yes' in tags:
+            return self.go_to_state(self.challenge_emotion)
+        else:
+            return self.go_to_state(self.cd_wave2)
 
     def on_enter_challenge_emotion(self):
         """Send a message when entering the "unrecognized_faculty" state."""
@@ -423,7 +402,7 @@ class CBTBot(ChatBot):
             "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
         ])
 
-    def respond_from_specific_cd(self, message, tags):
+    def respond_from_challenge_emotion(self, message, tags):
         """Decide what state to go to from the "unrecognized_faculty" state.
 
         Parameters:
@@ -439,6 +418,103 @@ class CBTBot(ChatBot):
                 return self.go_to_state('specific_emotion')
         return self.finish('emotion')
 
+    def on_enter_cd_wave2(self):
+        """Send a message when entering the "unrecognized_faculty" state."""
+        return "Do you feel like you"
+
+    def respond_from_cd_wave2(self, message, tags):
+        """Decide what state to go to from the "unrecognized_faculty" state.
+
+        Parameters:
+            message (str): The incoming message.
+            tags (Mapping[str, int]): A count of the tags that apply to the message.
+
+        Returns:
+            str: The message to send to the user.
+        """
+        for emotion in self.EMOTIONS:
+            if emotion in tags:
+                self.emotion = emotion
+                return self.go_to_state('specific_emotion')
+        return self.finish('emotion')
+
+    def on_enter_cd_wave3(self):
+        """Send a message when entering the "unrecognized_faculty" state."""
+        return ' '.join([
+            "I'm not sure I understand - are you looking for",
+            "Celia, Hsing-hau, Jeff, Justin, Kathryn, or Umit?",
+        ])
+
+    def respond_from_cd_wave3(self, message, tags):
+        """Decide what state to go to from the "unrecognized_faculty" state.
+
+        Parameters:
+            message (str): The incoming message.
+            tags (Mapping[str, int]): A count of the tags that apply to the message.
+
+        Returns:
+            str: The message to send to the user.
+        """
+        for emotion in self.EMOTIONS:
+            if emotion in tags:
+                self.emotion = emotion
+                return self.go_to_state('specific_emotion')
+        return self.finish('emotion')
+
+
+
+
+
+
+    #breathing exercise
+    def on_enter_breathing1(self):
+        return "When feeling distressed, breathing is important. Can you slowly inhale and exhale with me? Inhale for 2 seconds. (Respond with 'y' when you have)"
+
+    def respond_from_breathing1(self, message, tags):
+        if 'y' in tags:
+            return self.go_to_state('breathing2')
+        else:
+            return self.go_to_state('breathing_confused2')
+
+    def on_enter_breathing_confused2(self):
+        return "Respond with 'y' to proceed with breathing exercise."
+
+    def respond_from_breathing_confused2(self, message, tags):
+        if 'y' in tags:
+            return self.go_to_state('breathing3')
+        else:
+            return self.go_to_state('breathing_confused2')
+
+    def on_enter_breathing2(self):
+        return "Good. Now exhale for two seconds. (Respond with 'y' when you have)"
+
+    def respond_from_breathing2(self, message, tags):
+        if 'y' in tags:
+            return self.go_to_state('breathing3')
+        else:
+            return self.go_to_state('breathing_confused3')
+
+    def on_enter_breathing_confused3(self):
+        return "Respond with 'y' to proceed with breathing exercise."
+
+    def respond_from_breathing_confused3(self, message, tags):
+        if 'y' in tags:
+            return self.go_to_state('homework')
+        else:
+            return self.go_to_state('breathing_confused3')
+
+    def on_enter_breathing3(self):
+        return "Great! Now do the same two more times. Do you feel more calm? "
+
+    def respond_from_breathing3(self, message, tags):
+        if 'yes' in tags:
+            return self.finish('homework')
+        else:
+            return self.finish('homework_fail')
+
+
+
+
     # "finish" functions
 
 
@@ -446,6 +522,11 @@ class CBTBot(ChatBot):
         """Send a message and go to the default state."""
         return "Sorry, I'm just a simple bot that can't understand much. You can ask me about office hours though!"
 
+    def finish_homework(self):
+        return "Ok."
+
+    def finish_homework_fail(self):
+        return "I'm sorry you feel that way."
 
     def finish_location(self):
         """Send a message and go to the default state."""
@@ -454,7 +535,7 @@ class CBTBot(ChatBot):
 
     def finish_success(self):
         """Send a message and go to the default state."""
-        return 'Great, let me know if you need anything else!'
+        return 'Great, that is so good to hear! If you want to talk some more, O-team leaders, the Emmons center, and RAs are confidential sources of help. Your feelings are valid.'
 
     def finish_fail(self):
         """Send a message and go to the default state."""
