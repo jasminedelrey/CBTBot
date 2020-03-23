@@ -135,8 +135,8 @@ class CBTBot(ChatBot):
         'undeserving': 'undeserving',
         'unlovable': 'unlovable',
         'abnormal': 'abnormal',
-        'failure': 'failure',
-        'failure':'failure',
+        'failure': 'a failure',
+        'a failure':'a failure',
 
         'religious': 'religious',
         'cultural': 'cultural',
@@ -271,7 +271,6 @@ class CBTBot(ChatBot):
             'not enough': 'emotional reasoning',
             'not prepared': 'emotional reasoning',
             'imposter': 'filtering',
-            'unlovable': 'personalization',
             'abnormal': 'personalization',
             'not confident': 'emotional reasoning',
             'should': 'should statement',
@@ -519,6 +518,7 @@ class CBTBot(ChatBot):
 
     def on_enter_cd_wave2(self):
         """Send a message when entering the "unrecognized_faculty" state."""
+        # the first check, explain belief again
         return "Expanding on our core beliefs can help expose what thought patterns sway us to feel bad about ourselves. Could you state a belief you hold close to you? Such as comparing yourself or undermining your capabilities?"
 
     def respond_from_cd_wave2(self, message, tags):
