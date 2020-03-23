@@ -415,7 +415,7 @@ class CBTBot(ChatBot):
         for emotion in self.EMOTIONS:
             if emotion in tags:
                 self.emotion = emotion
-                return self.go_to_state('specific_scenario')
+                return self.go_to_state('specific_emotion')
         return self.go_to_state('unknown_emotion')
 
 
