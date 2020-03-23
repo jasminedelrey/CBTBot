@@ -170,11 +170,13 @@ class CBTBot(ChatBot):
 
     SCENARIOS = [
         'roommate',
-        'class',
-        'home',
         'lost',
         'academic',
         'hard',
+        'alone',
+        'class',
+        'imposter',
+        'home',
         'religious',
         'race',
         'different',
@@ -182,7 +184,6 @@ class CBTBot(ChatBot):
         'social',
         'friends',
         'cultural',
-
     ]
 
     CORE_BELIEFS = {
@@ -301,7 +302,7 @@ class CBTBot(ChatBot):
             'isolated': "I hear your point; college is very different from what we're used to. What are times that you feel isolated?",
             'worthless': "I know that this isn't an easy topic. I appreciate you for sharing. What makes you feel this way? ",
             'worried': "This is a stressful time for many students. What makes you worry?",
-            'sad': "Why?",
+            'sad': "What is causing you to be sad in this moment?",
             'scared': "I want you to know that your feelings are valid. What makes you scared?",
             'tired': "There are many adjustments when transitioning to college that can make people feel worn down. \nDo you find yourself constantly tired or only after certain events?",
             'annoyed': "What are some things that makes you feel this way?",
