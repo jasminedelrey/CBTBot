@@ -64,6 +64,10 @@ class CBTBot(ChatBot):
         'isolated': 'isolated',
         'isolation': 'isolated',
         'worthless': 'worthless',
+        'far from home': 'homesick',
+        'different': 'isolated',
+        "parents don't know": 'unprepared',
+        "parents didn't go to college": 'unprepared',
         'worried': 'worried',
         'worry': 'worried',
         'sad': 'sad',
@@ -117,7 +121,6 @@ class CBTBot(ChatBot):
         'room mate': 'roommate',
         'roommate': 'roommate',
         'living': 'roommate',
-        'lost': 'lost',
         'academic': 'academic',
         'homework':'academic',
         'hard': 'hard',
@@ -143,17 +146,12 @@ class CBTBot(ChatBot):
 
         'religious': 'religious',
         'cultural': 'cultural',
-        'academic': 'academic',
         'personal': 'personal',
         'residential': 'residential',
 
-        'religious': 'religious',
         'race': 'race',
-        'different': 'different',
-        'academic': 'academic',
         'social': 'social',
         'friends': 'friends',
-        'cultural': 'cultural',
 
 
     }
@@ -241,10 +239,10 @@ class CBTBot(ChatBot):
         'should statement',
     }
 
-    ASSIGNMENTS = {'going to a place of worship.', 'volunteering for a cause you believe in.', 'going to the park.',
-                   'going for a walk.', 'going out for dinner.', 'calling friends and/or family.',
-                   'going out with friends and/or family.', 'working out.', 'getting immersed in art.', 'dancing.',
-                   'singing.', 'watching your favorite movie.', 'journaling your thoughts.', 'slowly breathing in and out.'}
+    ASSIGNMENTS = {'going to a place of worship! ', 'volunteering for a cause you believe in. ', 'going to the park! ',
+                   'going for a walk! ', 'going out for dinner ! ', 'calling friends and/or family. ',
+                   'going out with friends and/or family. ', 'working out! ', 'getting immersed in art! ', 'dancing! ',
+                   'singing ! ', 'watching your favorite movie ! ', 'journaling your thoughts.', 'slowly breathing in and out. '}
 
     def __init__(self):
         """Initialize the OxyCSBot.
@@ -275,8 +273,6 @@ class CBTBot(ChatBot):
             'not enough': 'emotional reasoning',
             'not prepared': 'emotional reasoning',
             'imposter': 'filtering',
-            'unlovable': 'personalization',
-            'abnormal': 'personalization',
             'not confident': 'emotional reasoning',
             'should': 'should statement',
             'succeed': 'catastrophizing',
