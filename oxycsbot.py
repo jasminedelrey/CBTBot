@@ -515,7 +515,7 @@ class CBTBot(ChatBot):
         if "I am" in tags:
             return self.go_to_state('check_feeling')
         else:
-            return self.finish('breathing')
+            return self.finish('breathing1')
 
     def on_enter_cd_wave2(self):
         """Send a message when entering the "unrecognized_faculty" state."""
@@ -587,7 +587,7 @@ class CBTBot(ChatBot):
         if 'yes' in tags:
             return self.finish('success')
         else:
-            return self.go_to_state('breathing')
+            return self.go_to_state('breathing1')
 
     def on_enter_confused_campus_help(self):
         return "I'm sorry. I don't understand. Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, or academic matters?"
@@ -596,7 +596,7 @@ class CBTBot(ChatBot):
         if 'yes' in tags:
             return self.finish('success')
         else:
-            return self.go_to_state('breathing')
+            return self.go_to_state('breathing1')
 
     def on_enter_check_feeling(self):
         return "It is helpful to take in moments in our life in a positive light. And to remember to practice self-compassion. Do you feel better?"
