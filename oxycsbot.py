@@ -61,8 +61,10 @@ class CBTBot(ChatBot):
         'miss family': 'homesick',
         'miss my family': 'homesick',
         'anxious': 'anxiety',
+        'far from home': 'homesick',
         'isolated': 'isolated',
         'isolation': 'isolated',
+        'different': 'isolated',
         'worthless': 'worthless',
         'worried': 'worried',
         'worry': 'worried',
@@ -72,6 +74,8 @@ class CBTBot(ChatBot):
         'tired': 'tired',
         'annoyed': 'annoyed',
         'angry': 'angry',
+        "parents don't know": 'unprepared',
+        "parents didn't go to college": 'unprepared',
         'unprepared': 'unprepared',
         'emptiness': 'empty',
         'empty': 'empty',
@@ -115,7 +119,6 @@ class CBTBot(ChatBot):
         'room mate': 'roommate',
         'roommate': 'roommate',
         'living': 'roommate',
-        'lost': 'lost',
         'academic': 'academic',
         'hard': 'hard',
         'alone': 'alone',
@@ -137,17 +140,12 @@ class CBTBot(ChatBot):
 
         'religious': 'religious',
         'cultural': 'cultural',
-        'academic': 'academic',
         'personal': 'personal',
         'residential': 'residential',
 
-        'religious': 'religious',
         'race': 'race',
-        'different': 'different',
-        'academic': 'academic',
         'social': 'social',
         'friends': 'friends',
-        'cultural': 'cultural',
 
 
     }
@@ -232,13 +230,13 @@ class CBTBot(ChatBot):
         'should statement',
     }
 
-    ASSIGNMENTS = {'going to a place of worship.', 'volunteering for a cause you believe in.', 'going to the park.',
-                   'going for a walk.', 'going out for dinner.', 'calling friends and/or family.',
-                   'going out with friends and/or family.', 'working out.', 'getting immersed in art.', 'dancing.',
-                   'singing.', 'watching your favorite movie.', 'journaling your thoughts.', 'slowly breathing in and out.'}
+    ASSIGNMENTS = {'going to a place of worship!', 'volunteering for a cause you believe in.', 'going to the park!',
+                   'going for a walk!', 'going out for dinner!', 'calling friends and/or family.',
+                   'going out with friends and/or family!', 'working out!', 'getting immersed in art!', 'dancing!',
+                   'singing!', 'watching your favorite movie!', 'journaling your thoughts!', 'slowly breathing in and out.'}
 
     def __init__(self):
-        """Initialize the OxyCSBot.
+        """Initialize the CBTBot.
         The `emotion` member variable stores whether the target emotion has
         been identified.
         """
@@ -266,8 +264,6 @@ class CBTBot(ChatBot):
             'not enough': 'emotional reasoning',
             'not prepared': 'emotional reasoning',
             'imposter': 'filtering',
-            'unlovable': 'personalization',
-            'abnormal': 'personalization',
             'not confident': 'emotional reasoning',
             'should': 'should statement',
             'succeed': 'catastrophizing',
@@ -540,7 +536,7 @@ class CBTBot(ChatBot):
                "not enough \n not prepared \n undeserving \n unlovable \n abnormal \n failure "
 
     def respond_from_unknown_cb(self, message, tags):
-        """Decide what state to go to from the "unknown_emotion" state.
+        """Decide what state to go to from the "unknown_cb" state.
 
         Parameters:
             message (str): The incoming message.bnh
