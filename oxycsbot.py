@@ -76,6 +76,8 @@ class CBTBot(ChatBot):
         'emptiness': 'empty',
         'empty': 'empty',
         'lost': 'lost',
+        'stressed':'stressed',
+        'stress':'stressed',
 
         # cogntive distortions
         'filtering': 'filtering',
@@ -134,6 +136,7 @@ class CBTBot(ChatBot):
         'unlovable': 'unlovable',
         'abnormal': 'abnormal',
         'failure': 'failure',
+        'failure':'failure',
 
         'religious': 'religious',
         'cultural': 'cultural',
@@ -165,7 +168,8 @@ class CBTBot(ChatBot):
         'angry',
         'unprepared',
         'empty',
-        'lost'
+        'lost',
+        'stressed'
     ]
 
     SCENARIOS = [
@@ -220,7 +224,7 @@ class CBTBot(ChatBot):
         'undeserving',
         'unlovable',
         'abnormal',
-        'failure',
+        'a failure',
     }
 
     DISTORTIONS = {
@@ -286,7 +290,7 @@ class CBTBot(ChatBot):
             'undeserving': "personalization",
             'unlovable': "personalization",
             'abnormal': "interpersonal fallacy",
-            'failure': "catastrophizing",
+            'a failure': "catastrophizing",
         }
         return responses[cb]
     def get_emotion(self, emotion):
@@ -313,6 +317,7 @@ class CBTBot(ChatBot):
             'empty': "Remember that you are an incredible human being full of unique experiences that make you ‘you’. Have you felt this way before or did something happen that made you feel empty?",
             'lost': "You don’t need to have every aspect of your life planned out, remember that college is a time of exploration and discovery. What makes you feel lost?",
             'bad': "It is normal to feel bad sometimes, but remember to not let it define your day. Did a certain event happen that made you feel bad?",
+            'stressed':'It is normal to experience a certain level of stress during college, as there are many obstacles that a first generation student needs to navigate. What specifically is causing you to be stressed at this time?'
 
         }
         return responses[emotion]
@@ -437,7 +442,7 @@ class CBTBot(ChatBot):
         return self.go_to_state('unknown_cb')
 
     def on_enter_unknown_scenario(self):
-        return "It seems like this feeling is not cause by a specific scenario. Try to think of a specific time when you felt this way. Maybe you have had problems with roomates, academics, friends, cultural issues, or religious issues. "
+        return "It seems like this feeling is not cause by a specific scenario. Try to think of a specific time when you felt this way. Maybe you have had problems with roommates, academics, friends, cultural issues, or religious issues. "
 
     def respond_from_unknown_scenario(self, message, tags):
         return self.go_to_state('specific_scenario')
