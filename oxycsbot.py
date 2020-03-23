@@ -76,8 +76,6 @@ class CBTBot(ChatBot):
         'emptiness': 'empty',
         'empty': 'empty',
         'lost': 'lost',
-        'stressed':'stressed',
-        'stress':'stressed',
 
         # cogntive distortions
         'filtering': 'filtering',
@@ -135,8 +133,7 @@ class CBTBot(ChatBot):
         'undeserving': 'undeserving',
         'unlovable': 'unlovable',
         'abnormal': 'abnormal',
-        'failure': 'a failure',
-        'a failure':'a failure',
+        'failure': 'failure',
 
         'religious': 'religious',
         'cultural': 'cultural',
@@ -168,19 +165,16 @@ class CBTBot(ChatBot):
         'angry',
         'unprepared',
         'empty',
-        'lost',
-        'stressed'
+        'lost'
     ]
 
     SCENARIOS = [
         'roommate',
+        'class',
+        'home',
         'lost',
         'academic',
         'hard',
-        'alone',
-        'class',
-        'imposter',
-        'home',
         'religious',
         'race',
         'different',
@@ -188,6 +182,7 @@ class CBTBot(ChatBot):
         'social',
         'friends',
         'cultural',
+
     ]
 
     CORE_BELIEFS = {
@@ -224,7 +219,7 @@ class CBTBot(ChatBot):
         'undeserving',
         'unlovable',
         'abnormal',
-        'a failure',
+        'failure',
     }
 
     DISTORTIONS = {
@@ -271,6 +266,7 @@ class CBTBot(ChatBot):
             'not enough': 'emotional reasoning',
             'not prepared': 'emotional reasoning',
             'imposter': 'filtering',
+            'unlovable': 'personalization',
             'abnormal': 'personalization',
             'not confident': 'emotional reasoning',
             'should': 'should statement',
@@ -289,7 +285,7 @@ class CBTBot(ChatBot):
             'undeserving': "personalization",
             'unlovable': "personalization",
             'abnormal': "interpersonal fallacy",
-            'a failure': "catastrophizing",
+            'failure': "catastrophizing",
         }
         return responses[cb]
     def get_emotion(self, emotion):
@@ -305,9 +301,9 @@ class CBTBot(ChatBot):
             'isolated': "I hear your point; college is very different from what we're used to. What are times that you feel isolated?",
             'worthless': "I know that this isn't an easy topic. I appreciate you for sharing. What makes you feel this way? ",
             'worried': "This is a stressful time for many students. What makes you worry?",
-            'sad': "What is causing you to be sad in this moment?",
+            'sad': "Why?",
             'scared': "I want you to know that your feelings are valid. What makes you scared?",
-            'tired': "There are many adjustments when transitioning to college that can make people feel worn down. \nDo you find yourself constantly tired or only after certain events?",
+            'tired': "There are many adjustments when transitioning to college that can make people feel worn down. Do you find yourself constantly tired or only after certain events?",
             'annoyed': "What are some things that makes you feel this way?",
             'angry': "It is understandable to have moments of anger, but remember that it is healthy to get rid of this anger. What makes you angered?",
             'unprepared': '\n'.join
@@ -316,7 +312,6 @@ class CBTBot(ChatBot):
             'empty': "Remember that you are an incredible human being full of unique experiences that make you ‘you’. Have you felt this way before or did something happen that made you feel empty?",
             'lost': "You don’t need to have every aspect of your life planned out, remember that college is a time of exploration and discovery. What makes you feel lost?",
             'bad': "It is normal to feel bad sometimes, but remember to not let it define your day. Did a certain event happen that made you feel bad?",
-            'stressed':'It is normal to experience a certain level of stress during college, as there are many obstacles that a first generation student needs to navigate. What specifically is causing you to be stressed at this time?'
 
         }
         return responses[emotion]
@@ -393,7 +388,8 @@ class CBTBot(ChatBot):
             if scenario in tags:
                 self.scenario = scenario
                 return self.go_to_state('specific_scenario')
-        return self.go_to_state('unknown_scenario')
+            else:
+                return self.go_to_state('unknown_scenario')
 
     def on_enter_unknown_emotion(self):
 
@@ -434,14 +430,14 @@ class CBTBot(ChatBot):
         return response
 
     def respond_from_specific_scenario(self, message, tags):
-        for cb in self.SCENARIOS:
+        for cb in self.CORE_BELIEFS:
             if cb in tags:
                 self.cb = cb
                 return self.go_to_state('specific_cb')
         return self.go_to_state('unknown_cb')
 
     def on_enter_unknown_scenario(self):
-        return "It seems like this feeling is not cause by a specific scenario. Try to think of a specific time when you felt this way. Maybe you have had problems with roommates, academics, friends, cultural issues, or religious issues. "
+        return "It seems like this feeling is not cause by a specific scenario. Try to think of a specific time when you felt this way. Maybe you have had problems with homesickness, roomates, academics, or imposter syndrome. ((Lets try to see if there are any underlying beliefs that make you feel this way. What negative core beliefs make you feel this way?))"
 
     def respond_from_unknown_scenario(self, message, tags):
         return self.go_to_state('specific_scenario')
@@ -449,7 +445,7 @@ class CBTBot(ChatBot):
     def on_enter_specific_cb(self):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
-            "Feeling like you are", self.cb,
+            "Feeling like you are ", self.cb,
             "seems like a negative core belief. Lets dive deeper. " + self.get_cd(self.get_cb_distortion(self.cb))
         ])
 
@@ -518,7 +514,6 @@ class CBTBot(ChatBot):
 
     def on_enter_cd_wave2(self):
         """Send a message when entering the "unrecognized_faculty" state."""
-        # the first check, explain belief again
         return "Expanding on our core beliefs can help expose what thought patterns sway us to feel bad about ourselves. Could you state a belief you hold close to you? Such as comparing yourself or undermining your capabilities?"
 
     def respond_from_cd_wave2(self, message, tags):
@@ -539,8 +534,8 @@ class CBTBot(ChatBot):
         """Send a message when entering the "" staunknown_cbte."""
         return "I am not sure if I understand. Core beliefs are what we believe about ourselves that influence how we interpret our experiences. \n" \
                "If our core beliefs are negative, they will negatively impact how we see others, the world, ourselves, and our future. \n" \
-               "Here are some common negative beliefs. If you suffer from any of these core beliefs, please type it.\n" \
-               " not enough \n not prepared \n undeserving \n unlovable \n abnormal \n a failure "
+               "Here are some common negative beliefs. If you suffer from any of these cognitive beliefs, please type it. \n" \
+               "not enough \n not prepared \n undeserving \n unlovable \n abnormal \n failure "
 
     def respond_from_unknown_cb(self, message, tags):
         """Decide what state to go to from the "unknown_emotion" state.
