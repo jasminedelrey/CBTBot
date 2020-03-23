@@ -288,7 +288,6 @@ class CBTBot(ChatBot):
             'failure': "catastrophizing",
         }
         return responses[cb]
-
     def get_emotion(self, emotion):
         """Find the office hours of a professor.
         Arguments:
