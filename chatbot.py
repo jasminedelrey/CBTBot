@@ -137,16 +137,6 @@ class ChatBot:
         return respond_method(message, self._get_tags(message))
 
     def finish(self, manner):
-        """Set the chatbot back to the default state.
-
-        This function will call the appropriate `finish_*` method.
-
-        Arguments:
-            manner (str): The type of exit from the flow.
-
-        Returns:
-            str: The response of the chatbot.
-        """
         response = getattr(self, f'finish_{manner}')()
         self.state = self.default_state
         return response

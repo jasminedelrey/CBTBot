@@ -76,6 +76,8 @@ class CBTBot(ChatBot):
         'emptiness': 'empty',
         'empty': 'empty',
         'lost': 'lost',
+        'stressed': 'stressed',
+        'stress':'stressed',
 
         # cogntive distortions
         'filtering': 'filtering',
@@ -117,6 +119,7 @@ class CBTBot(ChatBot):
         'living': 'roommate',
         'lost': 'lost',
         'academic': 'academic',
+        'homework':'academic',
         'hard': 'hard',
         'alone': 'alone',
         'class': 'class',
@@ -133,7 +136,10 @@ class CBTBot(ChatBot):
         'undeserving': 'undeserving',
         'unlovable': 'unlovable',
         'abnormal': 'abnormal',
-        'failure': 'failure',
+        'failure': 'a failure',
+        'a failure':'a failure',
+        'compare': 'less than someone',
+        'comparing': 'less than someone',
 
         'religious': 'religious',
         'cultural': 'cultural',
@@ -165,7 +171,8 @@ class CBTBot(ChatBot):
         'angry',
         'unprepared',
         'empty',
-        'lost'
+        'lost',
+        'stressed'
     ]
 
     SCENARIOS = [
@@ -219,7 +226,9 @@ class CBTBot(ChatBot):
         'undeserving',
         'unlovable',
         'abnormal',
-        'failure',
+        'a failure',
+        'compare',
+        'comparing',
     }
 
     DISTORTIONS = {
@@ -285,7 +294,7 @@ class CBTBot(ChatBot):
             'undeserving': "personalization",
             'unlovable': "personalization",
             'abnormal': "interpersonal fallacy",
-            'failure': "catastrophizing",
+            'a failure': "catastrophizing",
         }
         return responses[cb]
     def get_emotion(self, emotion):
@@ -301,7 +310,7 @@ class CBTBot(ChatBot):
             'isolated': "I hear your point; college is very different from what we're used to. What are times that you feel isolated?",
             'worthless': "I know that this isn't an easy topic. I appreciate you for sharing. What makes you feel this way? ",
             'worried': "This is a stressful time for many students. What makes you worry?",
-            'sad': "Why?",
+            'sad': "I am sorry that you are feeling this way. What is specifically making you feel sad at this time?",
             'scared': "I want you to know that your feelings are valid. What makes you scared?",
             'tired': "There are many adjustments when transitioning to college that can make people feel worn down. Do you find yourself constantly tired or only after certain events?",
             'annoyed': "What are some things that makes you feel this way?",
@@ -312,6 +321,7 @@ class CBTBot(ChatBot):
             'empty': "Remember that you are an incredible human being full of unique experiences that make you ‘you’. Have you felt this way before or did something happen that made you feel empty?",
             'lost': "You don’t need to have every aspect of your life planned out, remember that college is a time of exploration and discovery. What makes you feel lost?",
             'bad': "It is normal to feel bad sometimes, but remember to not let it define your day. Did a certain event happen that made you feel bad?",
+            'stressed': 'It is normal to experience a certain level of stress during college, as there are many obstacles that a first generation student needs to navigate. What specifically is causing you to be stressed at this time?',
 
         }
         return responses[emotion]
@@ -329,7 +339,7 @@ class CBTBot(ChatBot):
         responses = {
             'filtering': 'I understand. Its important to remember that theres a wider scope to things. Do you think that you often forget about the positive aspects of day to day frustrations?',
             'interpersonal fallacy': 'You seem to be a hard worker. Its easy to forget to direct energy back to your wellbeing. Is comparing yourself to others a common occurrence?',
-            'catastrophizing': 'I see. When things dont go our way, we often question if this happened because of us. These moments arent bad nor are they wrong. Do you often overthink worst scenarios?',
+            'catastrophizing': '\nI see. When things dont go our way, we often question if this happened because of us. These moments arent bad nor are they wrong. Do you often overthink worst scenarios?',
             'overgeneralization': 'Your feelings are valid. Theres a Japanese saying, ichi-go ichi-e. Every moment is unique and unrepeatable. Not all mistakes are bad and can predict other unique scenarios you find yourself in. Do you often think that one mistake is indicative of your abilities?',
             'personalization': 'Sometimes things are out of your control. And that is completely ok. No one deserves to take on the weight of the world singlehandedly. Do you often find yourself blaming yourself for external occurrences?',
             'emotional reasoning': 'A key part of Cognitive Behavioral Therapy is shaping your thoughts to healthily affect your actions and behavior. Do you often feel like you negatively assume others intentions?',
@@ -437,15 +447,14 @@ class CBTBot(ChatBot):
         return self.go_to_state('unknown_cb')
 
     def on_enter_unknown_scenario(self):
-        return "It seems like this feeling is not cause by a specific scenario. Try to think of a specific time when you felt this way. Maybe you have had problems with homesickness, roomates, academics, or imposter syndrome. ((Lets try to see if there are any underlying beliefs that make you feel this way. What negative core beliefs make you feel this way?))"
-
+        return "It seems like this feeling is not cause by a specific scenario. Try to think of a specific time when you felt this way. Maybe you have had problems with roommates, academics, culture, religion, or imposter syndrome. "
     def respond_from_unknown_scenario(self, message, tags):
         return self.go_to_state('specific_scenario')
 
     def on_enter_specific_cb(self):
         """Send a message when entering the "unrecognized_faculty" state."""
         return ' '.join([
-            "Feeling like you are ", self.cb,
+            "Feeling like you are", self.cb,
             "seems like a negative core belief. Lets dive deeper. " + self.get_cd(self.get_cb_distortion(self.cb))
         ])
 
@@ -534,8 +543,8 @@ class CBTBot(ChatBot):
         """Send a message when entering the "" staunknown_cbte."""
         return "I am not sure if I understand. Core beliefs are what we believe about ourselves that influence how we interpret our experiences. \n" \
                "If our core beliefs are negative, they will negatively impact how we see others, the world, ourselves, and our future. \n" \
-               "Here are some common negative beliefs. If you suffer from any of these cognitive beliefs, please type it. \n" \
-               "not enough \n not prepared \n undeserving \n unlovable \n abnormal \n failure "
+               "Here are some common negative beliefs. If you suffer from any of these core beliefs, please type it. \n" \
+               " not enough \n not prepared \n undeserving \n unlovable \n abnormal \n a failure "
 
     def respond_from_unknown_cb(self, message, tags):
         """Decide what state to go to from the "unknown_emotion" state.
