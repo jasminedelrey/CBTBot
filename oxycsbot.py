@@ -65,6 +65,9 @@ class CBTBot(ChatBot):
         'isolation': 'isolated',
         'worthless': 'worthless',
         'far from home': 'homesick',
+        'culture': 'lost',
+        'lack': 'unprepared',
+        "dont' know" : 'unprepared',
         'different': 'isolated',
         "parents don't know": 'unprepared',
         "parents didn't go to college": 'unprepared',
@@ -153,7 +156,33 @@ class CBTBot(ChatBot):
 
         'race': 'race',
         'social': 'social',
+
+        'classes': 'classes',
+        'grade': 'grade',
+        'grades': 'grades',
         'friends': 'friends',
+        'other people': 'other people',
+        'never': 'never',
+        'everyone': 'everyone',
+
+        'stupid': 'stupid',
+        'smarter': 'smarter',
+
+
+        'not confident':'not confident',
+        'should':'should',
+        'succeed':'succeed',
+        'success':'success',
+        'job':'job',
+        'internship':'internship',
+        'weird':'weird',
+        'judge':'judge',
+        'drop out':'drop out',
+        'wrong':'wrong',
+        'undermine':'undermine',
+        'not capable':'not capable',
+        "don't believe":"don't believe",
+
     }
 
     EMOTIONS = [
@@ -313,7 +342,7 @@ class CBTBot(ChatBot):
             'homesick': "Being away from your support system is challenging. What about campus life makes you miss home?",
             'isolated': "I hear your point; college is very different from what we're used to. What are times that you feel isolated?",
             'worthless': "I know that this isn't an easy topic. I appreciate you for sharing. What makes you feel this way? ",
-            'worried': "This is a stressful time for many students. What makes you worry?",
+            'worried': "This is a stressful time for many students. College demands so much out of us. What makes you worry?",
             'sad': "I am sorry that you are feeling this way. What is specifically making you feel sad at this time?",
             'scared': "I want you to know that your feelings are valid. What makes you scared?",
             'tired': "There are many adjustments when transitioning to college that can make people feel worn down. Do you find yourself constantly tired or only after certain events?",
@@ -408,7 +437,7 @@ class CBTBot(ChatBot):
 
     def on_enter_unknown_emotion(self):
 
-        return "I am not sure if I understand. Try to think of specific emotions that you are feeling. " 
+        return "I am not sure if I understand. Try to think of specific emotions that you are feeling. Have you recently, or are you currently, struggling with any of the following emotions?"
         "\n Have you recently, or are you currently, struggling with any of the following emotions? \n"
         "anxiety \n"
         "isolation \n"
@@ -419,7 +448,7 @@ class CBTBot(ChatBot):
         "depressed \n"
 
     def respond_from_unknown_emotion(self, message, tags):
-        """Decide what state to go to from the "unknown_faculty" state.
+        """Decide what state to go to from the "unknown_emotion" state.
         Parameters:
             message (str): The incoming message.
             tags (Mapping[str, int]): A count of the tags that apply to the message.
@@ -474,7 +503,7 @@ class CBTBot(ChatBot):
         return self.get_cd(self.cb)
 
     def respond_from_specific_cd(self, message, tags):
-        """Decide what state to go to from the "unrecognized_faculty" state.
+        """Decide what state to go to from the "specific_cd" state.
         Parameters:
             message (str): The incoming message.
             tags (Mapping[str, int]): A count of the tags that apply to the message.
@@ -487,57 +516,27 @@ class CBTBot(ChatBot):
         else:
             return self.go_to_state('cd_wave2')
 
-    # def on_enter_unknown_cd(self):
-    #         """Send a message when entering the "unrecognized_faculty" state."""
-    #     return "Thank you for sharing your feelings. I am here to listen. Could you explain a certain scenario that is making you feel uncomfortable?"
-    #
-    # def respond_from_unknown_cd(self, message, tags):
-    #         """Decide what state to go to from the "unrecognized_faculty" state.
-    #         Parameters:
-    #             message (str): The incoming message.
-    #             tags (Mapping[str, int]): A count of the tags that apply to the message.
-    #         Returns:
-    #             str: The message to send to the user.
-    #         """
-    #     for scenario in self.SCENARIOS:
-    #         if scenario in tags:
-    #             self.scenario = scenario
-    #             return self.go_to_state('specific_scenario')
-    #         else:
-    #             return self.go_to_state('confused_scenario')
 
     def on_enter_challenge_emotion(self):
-        """Send a message when entering the "unrecognized_faculty" state."""
+        """Send a message when entering the "challenge_emotion" state."""
         return ' '.join([
             "Think of a time of where you felt the opposite. You felt loved, confident, and you felt others saw you in this light. Describe any time where you felt smart, capable and loved. ",
             "Or describe a time where you felt loved and respected by others. Start with 'I am'.",
         ])
 
     def respond_from_challenge_emotion(self, message, tags):
-        """Decide what state to go to from the "unrecognized_faculty" state.
-        Parameters:
-            message (str): The incoming message.
-            tags (Mapping[str, int]): A count of the tags that apply to the message.
-        Returns:
-            str: The message to send to the user.
-        """
+
         if "I am" in tags:
             return self.go_to_state('check_feeling')
         else:
             return self.go_to_state('breathing1')
 
     def on_enter_cd_wave2(self):
-        """Send a message when entering the "unrecognized_faculty" state."""
+
         return "Expanding on our core beliefs can help expose what thought patterns sway us to feel bad about ourselves. Could you state a belief you hold close to you? Such as comparing yourself or undermining your capabilities?"
 
     def respond_from_cd_wave2(self, message, tags):
-        """Decide what state to go to from the "unrecognized_faculty" state.
-        Parameters:
-            message (str): The incoming message.
-            tags (Mapping[str, int]): A count of the tags that apply to the message.
-        Returns:
-            str: The message to send to the user.
-        """
+
         for cb in self.CORE_BELIEFS:
             if cb in tags:
                 self.cb = cb
@@ -545,22 +544,14 @@ class CBTBot(ChatBot):
         return self.go_to_state('unknown_cb')
 
     def on_enter_unknown_cb(self):
-        """Send a message when entering the "" staunknown_cbte."""
+
         return "I am not sure if I understand. Core beliefs are what we believe about ourselves that influence how we interpret our experiences. \n" \
                "If our core beliefs are negative, they will negatively impact how we see others, the world, ourselves, and our future. \n" \
                "Here are some common negative beliefs. If you suffer from any of these core beliefs, please type it. \n" \
                " not enough \n not prepared \n undeserving \n unlovable \n abnormal \n a failure "
 
     def respond_from_unknown_cb(self, message, tags):
-        """Decide what state to go to from the "unknown_emotion" state.
 
-        Parameters:
-            message (str): The incoming message.bnh
-            tags (Mapping[str, int]): A count of the tags that apply to the message.
-
-        Returns:
-            str: The message to send to the user.
-        """
         for cb in self.CORE_BELIEFS:
             if cb in tags:
                 self.cb = cb
@@ -568,7 +559,7 @@ class CBTBot(ChatBot):
         return self.go_to_state('unknown_cb')
 
     def on_enter_confused_scenario(self):
-        return "I can see that this is discomforting to you. What is another time you felt this way?"
+        return "I can see that this is discomforting to you. What is different time you felt this way?"
 
     def respond_from_confused_scenario(self, message, tags):
         for scenario in self.SCENARIOS:
@@ -578,7 +569,7 @@ class CBTBot(ChatBot):
         return self.go_to_state('find_campus_help')
 
     def on_enter_find_campus_help(self):
-        return "Thank you for sharing your feelings. This is the first step towards molding more positive thought patterns for your day to day life. I think that other campus resources will monumentally help you work through these feelings. Would you like to someone about religious, cultural, personal, residential, academic, or financial matters?"
+        return "Thank you for sharing your feelings. This is the first step towards molding more positive thought patterns for your day to day life. Resources on campus will monumentally help you work through these feelings. Would you like to someone about religious, cultural, personal, residential, academic, or financial matters?"
 
     def respond_from_find_campus_help(self, message, tags):
         for area in self.AREAS:
@@ -601,7 +592,7 @@ class CBTBot(ChatBot):
 
     def respond_from_confused_campus_help(self, message, tags):
         if 'yes' in tags:
-            return self.finish('find_campus_help')
+            return self.go_to_state('find_campus_help')
         else:
             return self.go_to_state('success')
 
@@ -678,7 +669,7 @@ class CBTBot(ChatBot):
     # "finish" functions
 
     def finish_confused(self):
-        """Send a message and go to the default state."""
+
         return "Sorry, I'm confused. Could you explain more?"
 
     def finish_homework(self):
@@ -690,12 +681,12 @@ class CBTBot(ChatBot):
             random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
 
     def finish_success(self):
-        """Send a message and go to the default state."""
+
         return "Reflecting on our feelings can help us understand unhealthy thought patterns and change them for the better. If you want to talk some more, O-team leaders, the Emmons center, and RAs are confidential sources of help. Your feelings are valid. For now, I suggest " + (
             random.choice(tuple(self.ASSIGNMENTS))) + "I appreciate your vulnerability."
 
     def finish_thanks(self):
-        """Send a message and go to the default state."""
+
         return "You're welcome!"
 
 
