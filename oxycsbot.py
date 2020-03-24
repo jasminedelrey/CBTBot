@@ -149,12 +149,11 @@ class CBTBot(ChatBot):
         'cultural': 'cultural',
         'personal': 'personal',
         'residential': 'residential',
+        'financial': 'financial',
 
         'race': 'race',
         'social': 'social',
         'friends': 'friends',
-
-
     }
 
     EMOTIONS = [
@@ -239,6 +238,13 @@ class CBTBot(ChatBot):
         'emotional reasoning',
         'should statement',
     }
+    AREAS = {
+        'religious',
+        'cultural',
+        'personal',
+        'residential',
+        'financial',
+    }
 
     ASSIGNMENTS = {'going to a place of worship! ', 'volunteering for a cause you believe in. ', 'going to the park! ',
                    'going for a walk! ', 'going out for dinner ! ', 'calling friends and/or family. ',
@@ -256,6 +262,7 @@ class CBTBot(ChatBot):
         self.scenario = None
         self.cb = None
         self.cd = None
+        self.area = None
 
     def get_cb_distortion(self, cb):
 
@@ -351,6 +358,7 @@ class CBTBot(ChatBot):
             'academic': 'Your professor is a great resource. Oxys education emphasizes the bond between student and professor. If you cant find help from them, there are student peer learners that can help you with a class your struggling.',
             'personal': "The Emmons center houses professional therapists and workers that serve as helpful, confidential ears. They're here to help. They even offer FREE sessions.",
             'residential': 'The Office of Residential Education can help you sort out any insecurities you may have with your housing. Room swap is a process several Oxy students utilize to switch to different dorms that better fit them.',
+            'financial':'The Financial Aid office can personally guide you through understanding your financial aid package while providing resources for work study, loans, and grants. They are a great resource to visit if you are feeling anxious about paying for college. People at the office want to help students!',
         }
         return responses[area]
 
@@ -516,7 +524,7 @@ class CBTBot(ChatBot):
         if "I am" in tags:
             return self.go_to_state('check_feeling')
         else:
-            return self.finish('breathing1')
+            return self.go_to_state('breathing1')
 
     def on_enter_cd_wave2(self):
         """Send a message when entering the "unrecognized_faculty" state."""
@@ -567,19 +575,17 @@ class CBTBot(ChatBot):
             if scenario in tags:
                 self.scenario = scenario
                 return self.go_to_state('specific_scenario')
-            else:
-                return self.go_to_state('find_campus_help')
+        return self.go_to_state('find_campus_help')
 
     def on_enter_find_campus_help(self):
-        return "Thank you for sharing your feelings. This is the first step towards molding more positive thought patterns for your day to day life. I think that other campus resources will monumentally help you work through these feelings. Would you like to someone about religious, cultural, personal, residential, or academic matters?"
+        return "Thank you for sharing your feelings. This is the first step towards molding more positive thought patterns for your day to day life. I think that other campus resources will monumentally help you work through these feelings. Would you like to someone about religious, cultural, personal, residential, academic, or financial matters?"
 
-    def respond_find_campus_help(self, message, tags):
+    def respond_from_find_campus_help(self, message, tags):
         for area in self.AREAS:
             if area in tags:
                 self.area = area
                 return self.go_to_state('specific_area')
-            else:
-                return self.go_to_state('confused_campus_help')
+        return self.go_to_state('confused_campus_help')
 
     def on_enter_specific_area(self):
         return f"{self.get_campus_help(self.area)}. Did you find what you're looking for?"
@@ -591,13 +597,13 @@ class CBTBot(ChatBot):
             return self.go_to_state('breathing1')
 
     def on_enter_confused_campus_help(self):
-        return "I'm sorry. I don't understand. Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, or academic matters?"
+        return "I'm sorry. I don't understand. Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, academic, or financial matters? If so, type 'yes' to continue. "
 
     def respond_from_confused_campus_help(self, message, tags):
         if 'yes' in tags:
-            return self.finish('success')
+            return self.finish('find_campus_help')
         else:
-            return self.go_to_state('breathing1')
+            return self.go_to_state('success')
 
     def on_enter_check_feeling(self):
         return "It is helpful to take in moments in our life in a positive light. And to remember to practice self-compassion. Do you feel better?"
@@ -609,7 +615,7 @@ class CBTBot(ChatBot):
             return self.go_to_state('breathing1')
 
     def on_enter_check_feeling2(self):
-        return "Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, or academic matters?"
+        return "Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, academic, or financial matters? If so, type 'yes' to continue."
 
     def respond_from_check_feeling2(self, message, tags):
         if 'yes' in tags:
@@ -618,7 +624,7 @@ class CBTBot(ChatBot):
             return self.finish('success')
 
     def on_enter_check_feeling2_good(self):
-        return "That's great to hear! Would you like to reach out to an Oxy resource about religious, cultural, personal, residential, or academic matters?"
+        return "That's great to hear! Would you like to reach out to an Oxy resource about religious, cultural, personal, residential academic, or financial matters? If so, type 'yes' to continue."
 
     def respond_from_check_feeling2_good(self, message, tags):
         if 'yes' in tags:
