@@ -80,6 +80,7 @@ class CBTBot(ChatBot):
         'emptiness': 'empty',
         'empty': 'empty',
         'lost': 'lost',
+        'culture shock': 'lost',
         'stressed': 'stressed',
         'stress':'stressed',
 
@@ -346,9 +347,9 @@ class CBTBot(ChatBot):
     def get_campus_help(self, area):
         responses = {
             'religious': 'The folks over at the Herrick Interfaith Center host several groups that foster a community within different religions and beliefs.',
-            'cultural': 'If you head over to SLICE, Student Leadership, Involvement, & Community Engagement, they can redirect you to clubs on campus that foster communities within cultural groups. You can also reach out to Oxy students of an interest you dont find represented.',
+            'cultural': 'If you head over to SLICE, Student Leadership, Involvement, & Community Engagement, they can redirect you to clubs on campus that foster communities within cultural groups. You can also reach out to Oxy students of an interest you dont find represented. The Intercultural Community Center is also a great hangout place at 1501 Campus Place that facilitates community-oriented discussions among diverse groups on campus.',
             'academic': 'Your professor is a great resource. Oxys education emphasizes the bond between student and professor. If you cant find help from them, there are student peer learners that can help you with a class your struggling.',
-            'personal': 'The Emmons center houses professional therapists and workers that serve as helpful, confidential ears. Theyre here to help. They offer FREE sessions.',
+            'personal': "The Emmons center houses professional therapists and workers that serve as helpful, confidential ears. They're here to help. They even offer FREE sessions.",
             'residential': 'The Office of Residential Education can help you sort out any insecurities you may have with your housing. Room swap is a process several Oxy students utilize to switch to different dorms that better fit them.',
         }
         return responses[area]
