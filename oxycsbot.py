@@ -437,14 +437,14 @@ class CBTBot(ChatBot):
 
     def on_enter_unknown_emotion(self):
 
-        return "I am not sure if I understand. Try to think of specific emotions that you are feeling. Have you recently, or are you currently, struggling with any of the following emotions?"
-        "\n Have you recently, or are you currently, struggling with any of the following emotions? \n"
-        "anxiety \n"
-        "isolation \n"
-        "worthlessness \n"
-        "worry \n"
-        "unpreparedness \n"
-        "lost \n"
+        return "I am not sure if I understand. Try to think of specific emotions that you are feeling. Have you recently, or are you currently, struggling with any of the following emotions?" \
+        "\n Have you recently, or are you currently, struggling with any of the following emotions? \n" \
+        "anxiety \n" \
+        "isolation \n" \
+        "worthlessness \n" \
+        "worry \n" \
+        "unpreparedness \n" \
+        "lost \n" \
         "depressed \n"
 
     def respond_from_unknown_emotion(self, message, tags):
