@@ -16,6 +16,7 @@ class CBTBot(ChatBot):
 
     STATES = [
         'waiting',
+        'intro',
        'specific_emotion',
        'unknown_emotion',
        'specific_scenario',
@@ -40,7 +41,6 @@ class CBTBot(ChatBot):
        'check_feeling',
         'check_feeling2',
         'check_feeling2_good',
-        'intro',
 
 
     ]
@@ -287,11 +287,12 @@ class CBTBot(ChatBot):
         """
         super().__init__(default_state='waiting')
         self.emotion = None
-        self.emotion = None
         self.scenario = None
         self.cb = None
         self.cd = None
         self.area = None
+        self.unknown_cd = None
+        self.cd_wave3 = None
 
     def get_cb_distortion(self, cb):
 
@@ -419,7 +420,6 @@ class CBTBot(ChatBot):
         return response
 
     def respond_from_intro(self, message, tags):
-
         for emotion in self.EMOTIONS:
             if emotion in tags:
                 self.emotion = emotion
@@ -535,7 +535,16 @@ class CBTBot(ChatBot):
         if "I am" in tags:
             return self.go_to_state('check_feeling')
         else:
-            return self.go_to_state('breathing1')
+            return self.go_to_state('unknown_challenge')
+
+    def on_enter_unknown_challenge(self):
+        response = "Remember to start your sentence with 'I am'. This will help you claim this positive belief."
+        return response
+    def respond_from_unknown_challenge(self, message, tags):
+        if "I am" in tags:
+            return self.go_to_state('check_feeling')
+        else:
+            return self.go_to_state('unknown_challenge')
 
     def on_enter_cd_wave2(self):
 
