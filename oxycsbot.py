@@ -40,6 +40,7 @@ class CBTBot(ChatBot):
        'check_feeling',
         'check_feeling2',
         'check_feeling2_good',
+        'intro',
 
 
     ]
@@ -50,9 +51,8 @@ class CBTBot(ChatBot):
         'feel': 'help',
         'am': 'help',
         '': 'help',
-        'hello': 'help',
-        'hi': 'help',
-
+        'hello': 'hello',
+        'hi': 'hello',
         # emotions
         'anxiety': 'anxiety',
         'homesick': 'homesick',
@@ -402,14 +402,26 @@ class CBTBot(ChatBot):
             str: The message to send to the user.
         """
         self.emotion = None
+        self.go_to_state('intro')
+        # else:
+        #     for emotion in self.EMOTIONS:
+        #         if emotion in tags:
+        #             self.emotion = emotion
+        #             return self.go_to_state('specific_emotion')
+        #         return self.go_to_state('unknown_emotion')
+
+    # "specific_emotion" state functions
+
+    def on_enter_intro(self):
+        return "Hello! I'm an O-team leader and I will be helping you through this rough patch. How are you feeling?"
+
+    def respond_from_intro(self, message, tags):
+
         for emotion in self.EMOTIONS:
             if emotion in tags:
                 self.emotion = emotion
                 return self.go_to_state('specific_emotion')
             return self.go_to_state('unknown_emotion')
-
-    # "specific_emotion" state functions
-
 
     def on_enter_specific_emotion(self):
         """Send a message when entering the "specific_emotion" state."""
