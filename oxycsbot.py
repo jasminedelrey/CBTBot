@@ -47,12 +47,12 @@ class CBTBot(ChatBot):
 
     TAGS = {
         # intent
+        'hello': 'hi',
+        'hi': 'hi',
         'help': 'help',
         'feel': 'help',
         'am': 'help',
         '': 'help',
-        'hello': 'hello',
-        'hi': 'hello',
         # emotions
         'anxiety': 'anxiety',
         'homesick': 'homesick',
@@ -287,12 +287,6 @@ class CBTBot(ChatBot):
         """
         super().__init__(default_state='waiting')
         self.emotion = None
-        self.scenario = None
-        self.cb = None
-        self.cd = None
-        self.area = None
-        self.unknown_cd = None
-        self.cd_wave3 = None
 
     def get_cb_distortion(self, cb):
 
@@ -402,9 +396,9 @@ class CBTBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-
-        if 'hello' in tags:
-            self.go_to_state('intro')
+        self.emotion = None
+        if 'hi' in tags:
+            return self.go_to_state('intro')
         else:
             for emotion in self.EMOTIONS:
                 if emotion in tags:
@@ -415,9 +409,7 @@ class CBTBot(ChatBot):
     # "specific_emotion" state functions
 
     def on_enter_intro(self):
-
-        response = "Hello! I'm an O-team leader and I will be helping you through this rough patch. How are you feeling?"
-        return response
+        return "Hello! I'm an O-team leader and I will be helping you through this rough patch. How are you feeling?"
 
     def respond_from_intro(self, message, tags):
         for emotion in self.EMOTIONS:
