@@ -431,12 +431,7 @@ class CBTBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        for scenario in self.SCENARIOS:
-            if scenario in tags:
-                self.scenario = scenario
-                return self.go_to_state('specific_scenario')
-            else:
-                return self.go_to_state('unknown_scenario')
+        return self.go_to_state('specific_scenario')
 
     def on_enter_unknown_emotion(self):
 
@@ -478,10 +473,10 @@ class CBTBot(ChatBot):
                 return self.go_to_state('specific_cb')
         return self.go_to_state('unknown_cb')
 
-    def on_enter_unknown_scenario(self):
-        return "It seems like this feeling is not cause by a specific scenario. Try to think of a specific time when you felt this way. Maybe you have had problems with roommates, academics, culture, religion, or imposter syndrome. "
-    def respond_from_unknown_scenario(self, message, tags):
-        return self.go_to_state('specific_scenario')
+    # def on_enter_unknown_scenario(self):
+    #     return "It seems like this feeling is not cause by a specific scenario. Try to think of a specific time when you felt this way. Maybe you have had problems with roommates, academics, culture, religion, or imposter syndrome. "
+    # def respond_from_unknown_scenario(self, message, tags):
+    #     return self.go_to_state('specific_scenario')
 
     def on_enter_specific_cb(self):
         """Send a message when entering the "unrecognized_faculty" state."""
