@@ -402,15 +402,12 @@ class CBTBot(ChatBot):
             str: The message to send to the user.
         """
         self.emotion = None
-        print("Hello! I'm an O-team leader and I will be helping you through this rough patch. How are you feeling?")
-        if 'help' in tags:
-            for emotion in self.EMOTIONS:
-                if emotion in tags:
-                    self.emotion = emotion
-                    return self.go_to_state('specific_emotion')
+
+        for emotion in self.EMOTIONS:
+            if emotion in tags:
+                self.emotion = emotion
+                return self.go_to_state('specific_emotion')
             return self.go_to_state('unknown_emotion')
-        else:
-            return self.finish('confused')
 
     # "specific_emotion" state functions
 
