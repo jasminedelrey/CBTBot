@@ -401,19 +401,22 @@ class CBTBot(ChatBot):
         Returns:
             str: The message to send to the user.
         """
-        self.emotion = None
-        self.go_to_state('intro')
-        # else:
-        #     for emotion in self.EMOTIONS:
-        #         if emotion in tags:
-        #             self.emotion = emotion
-        #             return self.go_to_state('specific_emotion')
-        #         return self.go_to_state('unknown_emotion')
+
+        if 'hello' in tags:
+            self.go_to_state('intro')
+        else:
+            for emotion in self.EMOTIONS:
+                if emotion in tags:
+                    self.emotion = emotion
+                    return self.go_to_state('specific_emotion')
+                return self.go_to_state('unknown_emotion')
 
     # "specific_emotion" state functions
 
     def on_enter_intro(self):
-        return "Hello! I'm an O-team leader and I will be helping you through this rough patch. How are you feeling?"
+
+        response = "Hello! I'm an O-team leader and I will be helping you through this rough patch. How are you feeling?"
+        return response
 
     def respond_from_intro(self, message, tags):
 
@@ -425,9 +428,7 @@ class CBTBot(ChatBot):
 
     def on_enter_specific_emotion(self):
         """Send a message when entering the "specific_emotion" state."""
-        response = [
-            f"{self.get_emotion(self.emotion)}"
-        ]
+        response = self.get_emotion(self.emotion)
         return response
 
     def respond_from_specific_emotion(self, message, tags):
@@ -447,7 +448,7 @@ class CBTBot(ChatBot):
 
     def on_enter_unknown_emotion(self):
 
-        return "I am not sure if I understand. Try to think of specific emotions that you are feeling. Have you recently, or are you currently, struggling with any of the following emotions?" \
+        return "I am not sure if I understand. Try to think of specific emotions that you are feeling." \
         "\n Have you recently, or are you currently, struggling with any of the following emotions? \n" \
         "anxiety \n" \
         "isolation \n" \
