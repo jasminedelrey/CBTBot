@@ -402,7 +402,6 @@ class CBTBot(ChatBot):
             str: The message to send to the user.
         """
         self.emotion = None
-
         for emotion in self.EMOTIONS:
             if emotion in tags:
                 self.emotion = emotion
@@ -410,6 +409,7 @@ class CBTBot(ChatBot):
             return self.go_to_state('unknown_emotion')
 
     # "specific_emotion" state functions
+
 
     def on_enter_specific_emotion(self):
         """Send a message when entering the "specific_emotion" state."""
